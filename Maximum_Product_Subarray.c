@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
 
 int maxProduct(int* nums, int numsSize)
 {
@@ -13,16 +17,19 @@ int maxProduct(int* nums, int numsSize)
     int idx = 0;
     while (idx < numsSize) {
         if (nums[idx] > 0) {
-            if (nums[idx] * l_max < l_max)
+            if ((nums[idx] * l_max) < l_max)
                 l_max = nums[idx];
             else
                 l_max *= nums[idx];
             l_min *= nums[idx];
         } else if (nums[idx] < 0) {
-            if (nums[idx] * l_min > l_min) {
+            if ((nums[idx] * l_min) > l_min) {
                 int temp = l_max;
                 l_max = l_min * nums[idx];
-                l_min = temp * nums[idx];
+                if ((temp * nums[idx]) < nums[idx])
+                    l_min = temp * nums[idx];
+                else
+                    l_min = nums[idx];
             } else {
                 l_max *= nums[idx];
                 l_min *= nums[idx];
@@ -44,4 +51,14 @@ int maxProduct(int* nums, int numsSize)
     }
 
     return g_max;
+}
+
+
+
+int main()
+{
+    int arr[] = {0,-3,1,1};
+    int ans = maxProduct(arr, 4);
+    printf("%d\n", ans);
+    return 0;
 }
