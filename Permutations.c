@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-
-
 /**
  * Return an array of arrays of size *returnSize.
  * Note: The returned array must be malloced, assume caller calls free().
@@ -72,29 +67,4 @@ int** permute(int* nums, int numsSize, int* returnSize)
     free(perm);
     *returnSize = fact;
     return arr_perm;
-}
-
-
-int main()
-{
-    int nums[] = {1, 2, 3};
-    int fact;
-
-    int **arr_perm = permute(nums, 3, &fact);
-
-    int row = 0;
-    int col;
-    while (row < fact) {
-        col = 0;
-        while (col < 3) {
-            printf("%d ", arr_perm[row][col]);
-            col++;
-        }
-        printf("\n");
-        free(arr_perm[row]);
-        row++;
-    }
-    free(arr_perm);
-
-    return 0;
 }
