@@ -13,7 +13,7 @@ public:
         if (len == 0)
             return;
 
-        // Firstly, flip the entire string.
+        // Firstly, reverse the entire string.
         char str[len + 1];
         strcpy(str, s.c_str());
         for (int i = 0 ; i < len >> 1 ; ++i) {
@@ -22,7 +22,7 @@ public:
             str[len - i - 1] = temp;
         }
 
-        // Secondly, flip each words.
+        // Secondly, reverse each words.
         int bgn = 0, end = 0;
         while (end < len) {
             while ((end < len) && str[end] != ' ')
