@@ -7,41 +7,48 @@
  * };
  */
 class Solution {
+private:
+    class CompareListNode {
+    public:
+        bool operator() (ListNode* src, ListNode* dst) {
+            return src->val > dst->val;
+        }
+    };
+
 public:
-    ListNode* mergeKLists(vector<ListNode*>& lists)
-    {
-        if (lists.size() == 0)
-            return NULL;
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        if (lists.size() == 0) {
+            return nullptr;
+        }
 
-        priority_queue<ListNode*, vector<ListNode*>, function<bool(ListNode*, ListNode*)>> queue(CompareList);
-        for (ListNode* curr : lists)
-            if (curr)
+        std::priority_queue<ListNode*, std::vector<ListNode*>, CompareListNode> queue;
+        for (ListNode* curr : lists) {
+            if (curr) {
                 queue.push(curr);
+            }
+        }
 
-        ListNode *head = NULL, *prev = NULL;
+        ListNode* head = nullptr;
+        ListNode* prev = nullptr;
         while (queue.size() > 0) {
-            ListNode* node_top = queue.top();
-            ListNode* node_new = new ListNode(node_top->val);
+            ListNode* topNode = queue.top();
+            ListNode* newNode = new ListNode(topNode->val);
+
             if (!head) {
-                head = node_new;
+                head = newNode;
                 prev = head;
             } else {
-                prev->next = node_new;
-                prev = node_new;
+                prev->next = newNode;
+                prev = newNode;
             }
 
-            node_top = node_top->next;
+            topNode = topNode->next;
             queue.pop();
-            if (node_top)
-                queue.push(node_top);
+            if (topNode) {
+                queue.push(topNode);
+            }
         }
 
         return head;
-    }
-
-private:
-    static bool CompareList(ListNode* src, ListNode* tge)
-    {
-        return src->val > tge->val;
     }
 };

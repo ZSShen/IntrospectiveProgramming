@@ -9,25 +9,38 @@
  */
 class Solution {
 public:
-    int kthSmallest(TreeNode* root, int k)
-    {
-        if (!root)
+    int kthSmallest(TreeNode* root, int k) {
+        if (!root) {
             return 0;
-        vector<int> nums;
-        traverseTree(root, nums, k);
-        int ans = nums.at(k - 1);
-        return ans;
+        }
+
+        int count = 0;
+        int result;
+        traverseTree(root, count, k, result);
+
+        return result;
     }
 
 private:
-    void traverseTree(TreeNode* root, vector<int>& nums, int k)
-    {
-        if (root->left)
-            traverseTree(root->left, nums, k);
-        nums.push_back(root->val);
-        if (nums.size() == k)
-            return;
-        if (root->right)
-            traverseTree(root->right, nums, k);
+    bool traverseTree(TreeNode* root, int& count, int k, int& result) {
+        if (root->left) {
+            if (traverseTree(root->left, count, k, result)) {
+                return true;
+            }
+        }
+
+        ++count;
+        if (count == k) {
+            result = root->val;
+            return true;
+        }
+
+        if (root->right) {
+            if (traverseTree(root->right, count, k, result)) {
+                return true;
+            } 
+        }
+
+        return false;
     }
 };

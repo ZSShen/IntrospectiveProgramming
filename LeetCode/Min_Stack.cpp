@@ -1,62 +1,46 @@
-typedef struct {
-    int capacity;
-    int idx_top;
-    int *arr_elem;
-    int *arr_ref;
-} MinStack;
+class MinStack {
+public:
+    /** initialize your data structure here. */
+    MinStack()
+        : size_(0)
+    { }
+    
+    void push(int x) {
+        stack_.push_back(x);
 
-
-#define MIN(a, b)   (((a) < (b))? (a) : (b))
-#define INVALID     (0)
-
-
-void minStackCreate(MinStack *stack, int maxSize) {
-    stack->arr_elem = (int*)malloc(sizeof(int) * maxSize);
-    stack->arr_ref = (int*)malloc(sizeof(int) * maxSize);
-    stack->capacity = maxSize;
-    stack->idx_top = 0;
-}
-
-void minStackPush(MinStack *stack, int elem_new) {
-    if (stack->idx_top == stack->capacity)
-        return;
-
-    int idx = stack->idx_top;
-    stack->arr_elem[idx] = elem_new;
-    if (idx == 0)
-        stack->arr_ref[idx] = elem_new;
-    else {
-        int elem_old = stack->arr_ref[idx - 1];
-        stack->arr_ref[idx] = MIN(elem_old, elem_new);
+        ++size_;
+        if (size_ == 1) {
+            mins_.push_back(x);
+            return;
+        }
+        mins_.push_back(std::min(mins_.back(), x));
+    }
+    
+    void pop() {
+        stack_.pop_back();
+        mins_.pop_back();
+        --size_;
+    }
+    
+    int top() {
+        return stack_.back();
+    }
+    
+    int getMin() {
+        return mins_.back();
     }
 
-    stack->idx_top++;
-}
+private:
+    int size_;
+    std::vector<int> stack_;
+    std::vector<int> mins_;
+};
 
-void minStackPop(MinStack *stack) {
-    if (stack->idx_top == 0)
-        return;
-
-    stack->idx_top--;
-}
-
-int minStackTop(MinStack *stack) {
-    if (stack->idx_top > 0) {
-        int idx = stack->idx_top;
-        return stack->arr_elem[idx - 1];
-    }
-    return INVALID;
-}
-
-int minStackGetMin(MinStack *stack) {
-    if (stack->idx_top > 0) {
-        int idx = stack->idx_top;
-        return stack->arr_ref[idx - 1];
-    }
-    return INVALID;
-}
-
-void minStackDestroy(MinStack *stack) {
-    free(stack->arr_elem);
-    free(stack->arr_ref);
-}
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack obj = new MinStack();
+ * obj.push(x);
+ * obj.pop();
+ * int param_3 = obj.top();
+ * int param_4 = obj.getMin();
+ */

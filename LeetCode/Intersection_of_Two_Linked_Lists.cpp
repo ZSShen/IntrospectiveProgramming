@@ -2,52 +2,52 @@
  * Definition for singly-linked list.
  * struct ListNode {
  *     int val;
- *     struct ListNode *next;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
  * };
  */
-struct ListNode *getIntersectionNode(struct ListNode *head_src, struct ListNode *head_tge)
-{
-    if ((!head_src) || (!head_tge))
-        return NULL;
-
-    struct ListNode *curr_src = head_src;
-    struct ListNode *curr_tge = head_tge;
-    int len_src = 1;
-    int len_tge = 1;
-
-    while (curr_src->next) {
-        curr_src = curr_src->next;
-        len_src++;
-    }
-    while (curr_tge->next) {
-        curr_tge = curr_tge->next;
-        len_tge++;
-    }
-
-    if (curr_src != curr_tge)
-        return NULL;
-
-    curr_src = head_src;
-    curr_tge = head_tge;
-    int iter;
-    if (len_src > len_tge) {
-        iter = len_src - len_tge;
-        while (iter > 0) {
-            curr_src = curr_src->next;
-            iter--;
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        if (!headA || !headB) {
+            return nullptr;
         }
-    } else {
-        iter = len_tge - len_src;
-        while (iter > 0) {
-            curr_tge = curr_tge->next;
-            iter--;
+
+        int lenA = 1;
+        ListNode* currA = headA;
+        while (currA->next) {
+            currA = currA->next;
+            ++lenA;
         }
-    }
 
-    while (curr_src != curr_tge) {
-        curr_src = curr_src->next;
-        curr_tge = curr_tge->next;
-    }
+        int lenB = 1;
+        ListNode* currB = headB;
+        while (currB->next) {
+            currB = currB->next;
+            ++lenB;
+        }
 
-    return curr_src;
-}
+        if (currA != currB) {
+            return nullptr;
+        }
+
+        currA = headA;
+        currB = headB;
+        if (lenA > lenB) {
+            for (int i = 0 ; i < lenA - lenB ; ++i) {
+                currA = currA->next;
+            }
+        } else {
+            for (int i = 0 ; i < lenB - lenA ; ++i) {
+                currB = currB->next;
+            }
+        }
+
+        while (currA != currB) {
+            currA = currA->next;
+            currB = currB->next;
+        }
+
+        return currA;
+    }
+};
