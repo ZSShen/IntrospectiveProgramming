@@ -3,3 +3,4 @@
 12/19, #14, Longest Common Prefix, O(S*T) Brute Force Prefix Match
 12/21, #15, 3Sum, 2 Pointers
 12/21, #20, Valid Parentheses, Stack Manipulation
+12/21, #3, Longest Substring Without Repeating Characters, 2 Pointers
