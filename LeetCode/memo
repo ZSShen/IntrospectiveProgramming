@@ -1,3 +1,4 @@
 12/18, #5, Longest Palindromic Substring, Dynamic Programming
 12/18, #28, Implement strStr(), String Search with O(n^2) Brute Force Method
 12/19, #14, Longest Common Prefix, O(S*T) Brute Force Prefix Match
+12/21, #15, 3Sum, 2 Pointers
