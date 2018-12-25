@@ -5,3 +5,4 @@
 12/21, #20, Valid Parentheses, Stack Manipulation
 12/21, #3, Longest Substring Without Repeating Characters, 2 Pointers
 12/22, #56, Merge Intervals, 2 Pointers
+12/25, #200, Number of Islands, DFS (BFS Memory Exceeds Limit)
