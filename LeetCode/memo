@@ -8,3 +8,4 @@
 12/25, #200, Number of Islands, DFS (BFS Memory Exceeds Limit)
 12/31, #494, Target Sum, DFS or Dynamic Programming
 1/1, #542, 01 Matrix, BFS Multi-sources Shortest Path
+1/1, #136, Single Number, Bit Manipulation
