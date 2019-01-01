@@ -7,3 +7,4 @@
 12/22, #56, Merge Intervals, 2 Pointers
 12/25, #200, Number of Islands, DFS (BFS Memory Exceeds Limit)
 12/31, #494, Target Sum, DFS or Dynamic Programming
+1/1, #542, 01 Matrix, BFS Multi-sources Shortest Path
