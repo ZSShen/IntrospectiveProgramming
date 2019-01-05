@@ -1,39 +1,50 @@
 class Solution {
 public:
-    bool search(vector<int>& nums, int target) {
-        int sz = nums.size();
-        if (sz == 0) {
-            return false;
-        }
+    int search(vector<int>& nums, int target) {
 
-        int l = 0, r = sz - 1;
-        while (l <= r) {
-            int m = (l + r) >> 1;
-            if (nums[m] == target) {
-                return true;
+        /**
+         * example: 1 2 3 4 5
+         *
+         * .            *   *
+         * case 1:  5 1 2 3 4   2 < 4, the right hand side is sorted.
+         *
+         *          *   *
+         * case 2:  2 3 4 5 1   2 < 4, the left hand side is sorted.
+         */
+
+        int left = 0;
+        int right = nums.size() - 1;
+
+        while (left <= right) {
+            int mid = (left + right) >> 1;
+            if (target == nums[mid]) {
+                return mid;
             }
 
-            if (nums[m] < nums[r]) {
-                if (target > nums[m] && target <= nums[r]) {
-                    l = m + 1;
+            // case 1
+            if (nums[mid] < nums[right]) {
+                if (target > nums[mid] && target <= nums[right]) {
+                    left = mid + 1;
                 } else {
-                    r = m - 1;
+                    right = mid - 1;
                 }
                 continue;
             }
 
-            if (nums[m] > nums[r]) {
-                if (target < nums[m] && target >= nums[l]) {
-                    r = m - 1;
+            // case 2
+            if (nums[mid] > nums[right]) {
+                if (target < nums[mid] && target >= nums[left]) {
+                    right = mid - 1;
                 } else {
-                    l = m + 1;
+                    left = mid + 1;
                 }
                 continue;
             }
-            
-            r = m - 1;
+
+            // only 1 element remained.
+            return -1;
         }
 
-        return false;
+        return -1;
     }
 };
