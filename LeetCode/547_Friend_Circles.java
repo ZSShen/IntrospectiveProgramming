@@ -7,9 +7,6 @@ class Solution {
         }
 
         boolean[] visit = new boolean[num];
-        for (int i = 0 ; i < num ; ++i) {
-            visit[i] = false;
-        }
 
         int count = 0;
         for (int i = 0 ; i < num ; ++i) {
