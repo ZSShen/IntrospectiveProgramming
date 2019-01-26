@@ -1,6 +1,6 @@
 12/18, #5, Longest Palindromic Substring, Dynamic Programming
 12/18, #28, Implement strStr(), String Search with O(n^2) Brute Force Method
-12/19, #14, Longest Common Prefix, O(S*T) Brute Force Prefix Match
+12/19, #14, Longest Common Prefix, Trie Implementation
 12/21, #15, 3Sum, 2 Pointers
 12/21, #20, Valid Parentheses, Stack Manipulation
 12/21, #3, Longest Substring Without Repeating Characters, 2 Pointers
@@ -16,3 +16,4 @@
 1/14, #13, Roman to Integer, State Machine
 1/15, #42, Trapping Rain Water, 2 Pointers and Dynamic Programming
 1/25, #146, LRU Cache, Doubely Linked List and Hash Table
+1/26, #380, Insert Delete GetRandom O(1), HashMap & Vector
