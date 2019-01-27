@@ -17,3 +17,5 @@
 1/15, #42, Trapping Rain Water, 2 Pointers and Dynamic Programming
 1/25, #146, LRU Cache, Doubely Linked List and Hash Table
 1/26, #380, Insert Delete GetRandom O(1), HashMap & Vector
+1/27, #69, Sqrt(x), Binary Search
+1/27, #103, Binary Tree Zig Zag Level Order Traversal, Stack not Queue
