@@ -19,3 +19,5 @@
 1/26, #380, Insert Delete GetRandom O(1), HashMap & Vector
 1/27, #69, Sqrt(x), Binary Search
 1/27, #103, Binary Tree Zig Zag Level Order Traversal, Stack not Queue
+1/27, #58, Legnth of Last Word, 2 Pointers
+1/27, #141, Linked List Cycle, Fast and Slow Pointers
