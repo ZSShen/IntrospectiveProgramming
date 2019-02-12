@@ -37,3 +37,8 @@
 2/5, #151, Reverse Words in a String, 2 pointers
 2/6, #34, Find First and Last Position of Element in Sorted Array, Binary Search with 2nd Template
 2/6, #278, First Bad Version, Binary Search with 2nd Template
+2/7, #658, Find K Closet Elements, Binary Search with 2nd Template
+2/10, #990, Satisfiability of Equality Equations, Disjoint Set and Union Find
+2/10, #991, Broken Calculator, Math
+2/12, #108, Convert Sorted Array to Binary Tree, Divide and Conquer
+2/12, #143, Reorder List, 2 Pointers (Slow and Fast) or Back Tracking
