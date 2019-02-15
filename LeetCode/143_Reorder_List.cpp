@@ -20,42 +20,44 @@ public:
         }
 
         ListNode* pred = nullptr;
-        runBackTracking(head, head, pred);
+        ListNode* slow = head;
+        ListNode* fast = head;
+        while (fast) {
+            pred = slow;
+            slow = slow->next;
+            fast = fast->next;
+            if (fast) {
+                fast = fast->next;
+            }
+        }
+
+        pred->next = nullptr;
+        ListNode* right = reverseList(slow);
+        ListNode* left = head;
+
+        while (right) {
+            ListNode* left_succ = left->next;
+            ListNode* right_succ = right->next;
+
+            left->next = right;
+            right->next = left_succ;
+
+            left = left_succ;
+            right = right_succ;
+        }
     }
 
 private:
-    void runBackTracking(ListNode*& left, ListNode* right, ListNode*& pred) {
+    ListNode* reverseList(ListNode* curr) {
 
-        // Traverse to the tail node.
-        if (!right) {
-            return;
+        ListNode* pred = nullptr;
+        while (curr) {
+            ListNode* succ = curr->next;
+            curr->next = pred;
+            pred = curr;
+            curr = succ;
         }
 
-        runBackTracking(left, right->next, pred);
-
-        // We already mark for termination, so simply return.
-        if (!left) {
-            return;
-        }
-
-        if (pred) {
-            pred->next = left;
-        }
-        auto temp = left;
-        left = left->next;
-        temp->next = right;
-        pred = right;
-
-        // Check for termination.
-        if (left == right) {
-            right->next = nullptr;
-            left = nullptr;
-            return;
-        }
-        if (left->next == right) {
-            pred->next = left;
-            left->next = nullptr;
-            left = nullptr;
-        }
+        return pred;
     }
 };

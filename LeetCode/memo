@@ -41,4 +41,8 @@
 2/10, #990, Satisfiability of Equality Equations, Disjoint Set and Union Find
 2/10, #991, Broken Calculator, Math
 2/12, #108, Convert Sorted Array to Binary Tree, Divide and Conquer
-2/12, #143, Reorder List, 2 Pointers (Slow and Fast) or Back Tracking
+2/12, #143, Reorder List, 2 Pointers (Slow and Fast)
+2/13, #138, Copy List With Random Pointer, 2 Pointers (Original and Shadow)
+2/14, #100, Same Tree, Binary Tree Property
+2/14, #179, Largest Number, Sorting and Number Theory
+2/15, #139, Word Break, Linear Dynamic Programming
