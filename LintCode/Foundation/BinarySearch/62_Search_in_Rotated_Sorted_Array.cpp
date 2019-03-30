@@ -23,14 +23,14 @@ public:
 
             if (A[m] < A[r]) {
                 // The right portion is sorted.
-                if (target >= A[m] && target <= A[r]) {
+                if (A[m] < target && target <= A[r]) {
                     l = m;
                 } else {
                     r = m;
                 }
             } else {
                 // The left portion is sorted.
-                if (target <= A[m] && target >= A[l]) {
+                if (A[l] <= target && target < A[m]) {
                     r = m;
                 } else {
                     l = m;
