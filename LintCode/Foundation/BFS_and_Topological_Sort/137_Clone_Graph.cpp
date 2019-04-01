@@ -24,10 +24,8 @@ public:
         std::queue<UndirectedGraphNode*> queue;
         queue.push(node);
 
-        auto root = new UndirectedGraphNode(node->label);
-
         std::unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> map;
-        map[node] = root;
+        map[node] = new UndirectedGraphNode(node->label);
 
         while (!queue.empty()) {
             auto origin = queue.front();
@@ -44,6 +42,6 @@ public:
             }
         }
 
-        return root;
+        return map[node];
     }
 };
