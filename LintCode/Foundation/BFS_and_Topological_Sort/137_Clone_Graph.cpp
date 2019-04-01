@@ -21,34 +21,29 @@ public:
             return nullptr;
         }
 
-        std::unordered_set<UndirectedGraphNode*> visit;
-        visit.insert(node);
-
         std::queue<UndirectedGraphNode*> queue;
         queue.push(node);
 
-        auto init = new UndirectedGraphNode(node->label);
+        auto root = new UndirectedGraphNode(node->label);
+
         std::unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> map;
-        map[node] = init;
+        map[node] = root;
 
         while (!queue.empty()) {
-            auto src_curr = queue.front();
+            auto origin = queue.front();
             queue.pop();
-            auto dst_curr = map[src_curr];
 
-            for (auto src_neighbor : src_curr->neighbors) {
-                if (visit.count(src_neighbor) != 1) {
-                    visit.insert(src_neighbor);
-                    queue.push(src_neighbor);
-                    map[src_neighbor] =
-                        new UndirectedGraphNode(src_neighbor->label);
+            auto clone = map[origin];
+            for (auto neighbor : origin->neighbors) {
+                if (map.count(neighbor) == 0) {
+                    map[neighbor] = new UndirectedGraphNode(neighbor->label);
+                    queue.push(neighbor);
                 }
 
-                auto dst_neighbor = map[src_neighbor];
-                dst_curr->neighbors.push_back(dst_neighbor);
+                clone->neighbors.push_back(map[neighbor]);
             }
         }
 
-        return init;
+        return root;
     }
 };
