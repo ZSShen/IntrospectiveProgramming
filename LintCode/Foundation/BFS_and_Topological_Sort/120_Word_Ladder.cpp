@@ -13,37 +13,39 @@ public:
             return 1;
         }
 
-        std::queue<std::string> queue;
-        queue.push(start);
-        int step = 1;
+        dict.insert(end);
+
+        std::queue<std::pair<std::string, int>> queue;
+        queue.push(std::make_pair(start, 1));
 
         while (!queue.empty()) {
-            int size = queue.size();
-            for (int i = 0 ; i < size ; ++i) {
-                auto src = queue.front();
-                queue.pop();
+            auto pair = queue.front();
+            queue.pop();
 
-                int len = src.length();
-                for (int j = 0 ; j < len ; ++j) {
-                    for (char ch = 'a' ; ch <= 'z' ; ++ch) {
-                        std::string dst(src);
-                        dst[j] = ch;
+            auto& src = pair.first;
+            auto& step = pair.second;
 
-                        if (dst == end) {
-                            return ++step;
-                        }
+            int size = src.length();
+            for (int l = 0 ; l < size ; ++l) {
 
-                        if (dict.count(dst) == 1) {
-                            queue.push(dst);
-                            dict.erase(dst);
-                        }
+                std::string dst(src);
+                for (char ch = 'a' ; ch <= 'z' ; ++ch) {
+                    dst[l] = ch;
+
+                    if (dict.count(dst) == 0) {
+                        continue;
                     }
+
+                    if (dst == end) {
+                        return step + 1;
+                    }
+
+                    queue.push(std::make_pair(dst, step + 1));
+                    dict.erase(dst);
                 }
             }
-
-            ++step;
         }
 
-        return 0;
+        return -1;
     }
 };

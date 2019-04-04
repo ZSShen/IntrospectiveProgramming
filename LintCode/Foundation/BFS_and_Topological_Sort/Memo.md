@@ -4,3 +4,6 @@
 
 + #137 Clone Graph
   - Use a hash map to maintain the mapping between the original nodes and the cloned nodes.
+
++ #611 Night Shortest Path, #433 Number of Islands
+  - Without using a visit matrix to guide the BFS, we should change the status of the chess board immediately after pushing a new coordination into the queue.
