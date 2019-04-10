@@ -25,41 +25,38 @@ public:
             return nullptr;
         }
 
-        int len_a = 1;
-        ListNode* curr_a = headA;
-        while (curr_a->next) {
-            curr_a = curr_a->next;
+        int len_a = 0;
+        auto curr = headA;
+        while (curr) {
             ++len_a;
+            curr = curr->next;
         }
 
-        int len_b = 1;
-        ListNode* curr_b = headB;
-        while (curr_b->next) {
-            curr_b = curr_b->next;
+        int len_b = 0;
+        curr = headB;
+        while (curr) {
             ++len_b;
+            curr = curr->next;
         }
 
-        if (curr_a != curr_b) {
-            return nullptr;
-        }
-
-        curr_a = headA;
-        curr_b = headB;
+        auto src = headA;
+        auto dst = headB;
+        int diff = abs(len_a - len_b);
         if (len_a > len_b) {
             for (int i = 0 ; i < len_a - len_b ; ++i) {
-                curr_a = curr_a->next;
+                src = src->next;
             }
         } else {
             for (int i = 0 ; i < len_b - len_a ; ++i) {
-                curr_b = curr_b->next;
+                dst = dst->next;
             }
         }
 
-        while (curr_a && curr_b && curr_a != curr_b) {
-            curr_a = curr_a->next;
-            curr_b = curr_b->next;
+        while (src != dst) {
+            src = src->next;
+            dst = dst->next;
         }
 
-        return curr_a;
+        return src;
     }
 };
