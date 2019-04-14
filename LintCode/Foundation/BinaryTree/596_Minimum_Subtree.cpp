@@ -11,12 +11,19 @@
  * }
  */
 
-struct Result {
-    TreeNode* root;
-    int sum;
 
+struct Result {
+    int sum;
+    TreeNode* root;
+    
     Result()
-        : root(nullptr), sum(INT_MAX)
+      : sum(0),
+        root(nullptr)
+    { }
+    
+    Result(int sum, TreeNode* root)
+      : sum(sum),
+        root(root)
     { }
 };
 
@@ -29,28 +36,28 @@ public:
      */
     TreeNode * findSubtree(TreeNode * root) {
         // write your code here
-
-        Result ans;
-        runPostOrder(root, ans);
-        return ans.root;
+        
+        Result opt(std::numeric_limits<int>::max(), nullptr);
+        runPostOrder(root, opt);
+        return opt.root;
     }
-
+    
 private:
-    int runPostOrder(TreeNode* root, Result& ans) {
-
+    Result runPostOrder(TreeNode* root, Result& opt) {
+        
         if (!root) {
-            return 0;
+            return Result();
+        }
+        
+        auto l = runPostOrder(root->left, opt);
+        auto r = runPostOrder(root->right, opt);
+
+        int sum = root->val + l.sum + r.sum;
+        if (sum < opt.sum) {
+            opt.sum = sum;
+            opt.root = root;
         }
 
-        auto sum = runPostOrder(root->left, ans) +
-                   runPostOrder(root->right, ans) +
-                   root->val;
-
-        if (sum < ans.sum) {
-            ans.sum = sum;
-            ans.root = root;
-        }
-
-        return sum;
+        return Result(sum, root);
     }
 };

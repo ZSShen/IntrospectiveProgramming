@@ -11,21 +11,18 @@
  * }
  */
 
+
 struct Result {
-    int sum;
     int size;
-    TreeNode* max; // Record the root of the subtree that contains the local maximum.
-    double avg;
-
+    int sum;
+    TreeNode* root;
+    
     Result()
-        : sum(std::numeric_limits<int>::min()),
-          size(0),
-          max(nullptr),
-          avg(std::numeric_limits<double>::min())
+        : size(0), sum(0), root(nullptr)
     { }
-
-    Result(int sum, int size, TreeNode* max, double avg)
-        : sum(sum), size(size), max(max), avg(avg)
+    
+    Result(int size, int sum, TreeNode* root)
+        : size(size), sum(sum), root(root)
     { }
 };
 
@@ -38,47 +35,32 @@ public:
      */
     TreeNode * findSubtree2(TreeNode * root) {
         // write your code here
-
-        auto result = runPostOrder(root);
-        return result.max;
+        
+        Result opt;
+        runPostOrder(root, opt);
+        return opt.root;
     }
 
 private:
-    Result runPostOrder(TreeNode* root) {
+    Result runPostOrder(TreeNode* root, Result& opt) {
 
         if (!root) {
             return Result();
         }
 
-        auto l = runPostOrder(root->left);
-        auto r = runPostOrder(root->right);
+        auto left = runPostOrder(root->left, opt);
+        auto right = runPostOrder(root->right, opt);
 
-        double child_avg;
-        TreeNode* child_max;
-        if (l.avg >= r.avg) {
-            child_avg = l.avg;
-            child_max = l.max;
-        } else {
-            child_avg = r.avg;
-            child_max = r.max;
-        }
+        int size = 1 + left.size + right.size;
+        int sum = root->val + left.sum + right.sum;
+        double avg = static_cast<double>(sum) / size;
 
-        int curr_sum = root->val;
-        int curr_size = 1;
-        if (root->left) {
-            curr_sum += l.sum;
-            curr_size += l.size;
+        if (!opt.root || avg > static_cast<double>(opt.sum) / opt.size) {
+            opt.size = size;
+            opt.sum = sum;
+            opt.root = root;
         }
-        if (root->right) {
-            curr_sum += r.sum;
-            curr_size += r.size;
-        }
-
-        double curr_avg = static_cast<double>(curr_sum) / curr_size;
-        if (curr_avg >= child_avg) {
-            return Result(curr_sum, curr_size, root, curr_avg);
-        } else {
-            return Result(curr_sum, curr_size, child_max, child_avg);
-        }
+        
+        return Result(size, sum, root);
     }
 };
