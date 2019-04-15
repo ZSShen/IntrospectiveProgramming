@@ -16,17 +16,23 @@
  *    do something for node
  */
 
+/*
+
+                  curr: 1, 6, 10, 11, 12
+    10            stack: 
+   /  \
+  1    11
+   \    \
+    6    12
+*/
 
 class BSTIterator {
-private:
-    std::stack<TreeNode*> stack;
-    TreeNode* curr;
-
 public:
     /*
     * @param root: The root of binary tree.
-    */BSTIterator(TreeNode * root)
-        : curr(root)
+    */
+    BSTIterator(TreeNode * root) 
+      : cur(root)
     { }
 
     /*
@@ -34,7 +40,8 @@ public:
      */
     bool hasNext() {
         // write your code here
-        return (!curr && stack.empty()) ? false : true;
+        
+        return cur || !stack.empty();
     }
 
     /*
@@ -42,16 +49,21 @@ public:
      */
     TreeNode * next() {
         // write your code here
-
-        while (curr) {
-            stack.push(curr);
-            curr = curr->left;
+        
+        while (cur) {
+            stack.push(cur);
+            cur = cur->left;
         }
 
-        auto ret = stack.top();
+        cur = stack.top();
         stack.pop();
-
-        curr = ret->right;
+        auto ret = cur;
+        cur = cur->right;        
         return ret;
     }
+
+private:
+    TreeNode* cur;
+    std::stack<TreeNode*> stack;
+
 };

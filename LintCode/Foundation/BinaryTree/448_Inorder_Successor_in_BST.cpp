@@ -18,32 +18,53 @@ public:
      */
     TreeNode * inorderSuccessor(TreeNode * root, TreeNode * p) {
         // write your code here
-
+        
+        /**
+         *  Case 1.
+         *          a
+         *           \
+         *            b
+         *           / \
+         *          /   \
+         *         /_____\
+         * 
+         *  Case 2.
+         *        /\
+         *       /  \
+         *      /____\
+         *      \
+         *       b
+         *      /
+         *     a
+         */
+         
         if (!root || !p) {
             return nullptr;
         }
 
         if (p->right) {
             // Case 1.
-            auto curr = p->right;
-            while (curr->left) {
-                curr = curr->left;
+            
+            p = p->right;
+            while (p->left) {
+                p = p->left;
             }
-            return curr;
-        } else {
-            // Case 2.
-            TreeNode* turn = nullptr;
-            auto curr = root;
-            while (curr != p) {
-                if (curr->val > p->val) {
-                    // Left turn.
-                    turn = curr;
-                    curr = curr->left;
-                } else {
-                    curr = curr->right;
-                }
-            }
-            return turn;
+            
+            return p;
         }
+        
+        // Case 2.
+        TreeNode* turn = nullptr;
+        auto curr = root;
+        while (curr != p) {
+            if (p->val < curr->val) {
+                turn = curr;
+                curr = curr->left;
+            } else {
+                curr = curr->right;
+            }
+        }
+
+        return turn;
     }
 };
