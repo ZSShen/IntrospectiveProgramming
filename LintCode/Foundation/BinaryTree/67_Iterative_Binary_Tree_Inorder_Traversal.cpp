@@ -54,3 +54,48 @@ public:
         return ans;
     }
 };
+
+class Solution2 {
+public:
+    /**
+     * @param root: A Tree
+     * @return: Inorder in ArrayList which contains node values.
+     */
+    vector<int> inorderTraversal(TreeNode * root) {
+        // write your code here
+
+        /**
+         *       10
+         *     /    \       s: 
+         *    5     19      v:
+         *   / \   /  \     c:
+         *  2  11 -2   6
+         *   \
+         *    8                 
+         */
+        
+        std::vector<int> ans;
+        
+        // Initial construction.
+        std::stack<TreeNode*> stack;
+        while (root) {
+            stack.push(root);
+            root = root->left;
+        }
+
+        while (!stack.empty()) {
+            
+            auto top = stack.top();
+            stack.pop();
+            ans.push_back(top->val);
+            
+            auto curr = top->right;
+            while (curr) {
+                stack.push(curr);
+                curr = curr->left;
+            }
+        }
+        
+        return ans;
+    }
+};
