@@ -1,5 +1,6 @@
 #include <list>
 
+
 class Solution {
 public:
     /**
@@ -8,27 +9,24 @@ public:
      */
     char firstUniqChar(string &str) {
         // Write your code here
-
-        std::list<char> list;
-        std::unordered_map<char, std::list<char>::iterator> map;
+        
+        std::unordered_map<char, int> map;
         std::unordered_set<char> set;
+        std::list<char> list;
 
         for (char ch : str) {
-            if (set.count(ch) == 1) {
-                continue;
+            ++map[ch];
+            
+            if (set.count(ch) == 0) {
+                set.insert(ch);
+                list.push_back(ch);
             }
 
-            if (map.count(ch) == 0) {
-                list.push_back(ch);
-                map[ch] = --list.end();
-            } else {
-                auto& iter = map[ch];
-                list.erase(iter);
-                map.erase(ch);
-                set.insert(ch);
+            if (list.front() == ch && map[ch] > 1) {
+                list.pop_front();
             }
         }
-
+        
         return list.front();
     }
 };
