@@ -72,3 +72,106 @@ private:
         return match;
     }
 };
+
+
+class DpSolution {
+public:
+    /**
+     * @param s: A string 
+     * @param p: A string includes "?" and "*"
+     * @return: is Match?
+     */
+    bool isMatch(string &s, string &p) {
+        // write your code here
+        
+        /**
+         *  s: abcde
+         *  p: a*b?e
+         * 
+         *             | dp[i - 1][j - 1]             , if s[i] == p[j] || p[j] == '?'
+         *  dp[i][j] = | dp[i - 1][j] || dp[i][j - 1] , if p[j] == '*'
+         *             | false
+         */
+        
+        int len_s = s.length();
+        int len_p = p.length();
+
+        bool dp[len_s + 1][len_p + 1] = {};
+        dp[0][0] = true;
+
+        for (int i = 1 ; i <= len_p ; ++i) {
+            if (p[i - 1] != '*') {
+                break;
+            }
+            dp[0][i] = true;
+        }
+
+        for (int i = 1 ; i <= len_s ; ++i) {
+            for (int j = 1 ; j <= len_p ; ++j) {
+                if (s[i - 1] == p[j - 1] || p[j - 1] == '?') {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else if (p[j - 1] == '*') {
+                    dp[i][j] = dp[i - 1][j] || dp[i][j - 1];
+                }
+            }
+        }
+        
+        return dp[len_s][len_p];
+    }
+};
+
+
+class DpSolution {
+public:
+    bool isMatch(string s, string p) {
+        
+        /**
+         *
+         * s: abcde
+         * p: ab*cd*e
+         *
+         *            | dp[i - 1][j - 1] , if s[i] == p[j] || p[j] == '.'
+         * dp[i][j] = |                  , if p[j] == '*'
+         *                  | dp[i][j - 2]  , Do not use * to match S.
+         * .                | dp[i - 1][j]  , s[i] == p[j - 1] || p[j - 1] == '.'
+         *            | false
+         * 
+         */
+        
+        int len_s = s.length();
+        int len_p = p.length();
+        
+        bool dp[len_s + 1][len_p + 1] = {};
+        dp[0][0] = true;
+        
+        // special case.
+        // s: ""
+        // p: a*b*c*
+        for (int i = 1 ; i <= len_p ; i += 2) {
+            if (i + 1 > len_p || p[i] != '*') {
+                break;
+            }
+            dp[0][i + 1] = true;
+        }
+        
+        for (int i = 1 ; i <= len_s ; ++i) {
+            for (int j = 1 ; j <= len_p ; ++j) {
+
+                if (s[i - 1] == p[j - 1] || p[j - 1] == '.') {
+                    dp[i][j] = dp[i - 1][j - 1];
+
+                } else if (p[j - 1] == '*') {
+                    // Do not match.
+                    dp[i][j] = dp[i][j - 2]; 
+                    
+                    // Try to use * to match S.
+                    if (s[i - 1] == p[j - 2] || p[j - 2] == '.') {
+                        dp[i][j] = dp[i][j] || dp[i - 1][j];
+                    }
+                }
+            }
+        }
+        
+        return dp[len_s][len_p];
+    }
+};
