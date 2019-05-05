@@ -19,64 +19,44 @@ public:
     vector<Interval> mergeTwoInterval(vector<Interval> &list1, vector<Interval> &list2) {
         // write your code here
 
+        while (!list2.empty()) {
+            list1.push_back(list2.back());
+            list2.pop_back();
+        }
+
+        if (list1.empty()) {
+            return {};
+        }
+
+        std::sort(list1.begin(), list1.end(),
+            [] (const Interval& lhs, const Interval& rhs) {
+                if (lhs.start == rhs.start) {
+                    return lhs.end < rhs.end;
+                }
+                return lhs.start < rhs.start;
+            });
+
         std::vector<Interval> ans;
 
-        int size_1 = list1.size();
-        int size_2 = list2.size();
-        if (size_1 == 0 && size_2 == 0) {
-            return ans;
-        }
+        int size = list1.size();
+        auto& merge = list1[0];
+        for (int i = 1 ; i < size ; ++i) {
+            auto& curr = list1[i];
 
-        int index_1, index_2;
-        Interval interval;
-        if (list1[0].start < list2[0].start) {
-            index_1 = 1;
-            index_2 = 0;
-            interval.start = list1[0].start;
-            interval.end = list1[0].end;
-        } else {
-            index_1 = 0;
-            index_2 = 1;
-            interval.start = list2[0].start;
-            interval.end = list2[0].end;
-        }
+            if (curr.start > merge.end) {
+                ans.push_back(merge);
 
-        while (index_1 < size_1 && index_2 < size_2) {
-            if (list1[index_1].start < list2[index_2].start) {
-                merge(interval, list1[index_1], ans);
-                ++index_1;
-            } else {
-                merge(interval, list2[index_2], ans);
-                ++index_2;
+                merge.start = curr.start;
+                merge.end = curr.end;
+                continue;
+            }
+
+            if (curr.end > merge.end) {
+                merge.end = curr.end;
             }
         }
+        ans.push_back(merge);
 
-        while (index_1 < size_1) {
-            merge(interval, list1[index_1], ans);
-            ++index_1;
-        }
-        while (index_2 < size_2) {
-            merge(interval, list2[index_2], ans);
-            ++index_2;
-        }
-
-        ans.push_back(interval);
         return ans;
-    }
-
-private:
-    void merge(
-            Interval& current,
-            Interval& to_be,
-            std::vector<Interval>& ans) {
-
-        if (to_be.start <= current.end) {
-            current.end = std::max(to_be.end, current.end);
-            return;
-        }
-
-        ans.push_back(current);
-        current.start = to_be.start;
-        current.end = to_be.end;
     }
 };
