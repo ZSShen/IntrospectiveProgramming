@@ -45,3 +45,86 @@ public:
         return visit.size() == n;
     }
 };
+
+
+class UnionFind {
+
+public:
+    UnionFind(int n)
+      : parents(std::vector<int>(n)) {
+
+        for (int i = 0 ; i < n ; ++i) {
+            parents[i] = i;
+        }
+    }
+
+    int find(int x) {
+
+        if (parents[x] == x) {
+            return x;
+        }
+
+        parents[x] = find(parents[x]);
+        return parents[x];
+    }
+
+    bool merge(int x, int y) {
+
+        int px = find(x);
+        int py = find(y);
+
+        if (px != py) {
+            parents[px] = py;
+            return true;
+        }
+
+        return false;
+    }
+
+
+private:
+    std::vector<int> parents;
+};
+
+
+class Solution {
+public:
+    /**
+     * @param n: An integer
+     * @param edges: a list of undirected edges
+     * @return: true if it's a valid tree, or false
+     */
+    bool validTree(int n, vector<vector<int>> &edges) {
+        // write your code here
+
+        /**
+         *                        -------
+         *                        |     |
+         *   0--1--3    (0, 3)    0--1--3
+         *      |       =====>       |
+         *      |                    |
+         *      2                    2
+         *
+         */
+
+        if (n == 0) {
+            return false;
+        }
+        if (edges.size() != n - 1) {
+            return false;
+        }
+
+        UnionFind sets(n);
+
+        for (const auto& edge : edges) {
+            int x = edge[0];
+            int y = edge[1];
+
+            if (!sets.merge(x, y)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+};
