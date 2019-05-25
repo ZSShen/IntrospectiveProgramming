@@ -70,3 +70,102 @@ public:
         return count_people == 0 ? count_day : -1;
     }
 };
+
+
+
+struct Record {
+    int x;
+    int y;
+
+    Record(int x, int y)
+      : x(x),
+        y(y)
+    { }
+};
+
+
+class Solution {
+public:
+    Solution()
+      : directs({
+        {1, 0},
+        {-1, 0},
+        {0, 1},
+        {0, -1}
+      })
+    { }
+
+    /**
+     * @param grid: a 2D integer grid
+     * @return: an integer
+     */
+    int zombie(vector<vector<int>> &grid) {
+        // write your code here
+
+        int num_r = grid.size();
+        if (num_r == 0) {
+            return -1;
+        }
+
+        int num_c = grid[0].size();
+        if (num_c == 0) {
+            return -1;
+        }
+
+        std::queue<Record> queue;
+
+        for (int x = 0 ; x < num_r ; ++x) {
+            for (int y = 0 ; y < num_c ; ++y) {
+                if (grid[x][y] == 1) {
+                    queue.push(Record(x, y));
+                }
+            }
+        }
+
+        int days = 0;
+        while (true) {
+            int size = queue.size();
+
+            for (int i = 0 ; i < size ; ++i) {
+                auto front = queue.front();
+                queue.pop();
+
+                int x = front.x;
+                int y = front.y;
+
+                for (const auto& direct : directs) {
+                    int nx = x + direct[0];
+                    int ny = y + direct[1];
+
+                    if (!(nx >= 0 && nx < num_r && ny >= 0 && ny < num_c) ||
+                        (grid[nx][ny] == 2 || grid[nx][ny] == 1)) {
+                        continue;
+                    }
+
+                    grid[nx][ny] = 1;
+                    queue.push(Record(nx, ny));
+                }
+            }
+
+            if (queue.empty()) {
+                break;
+            }
+            ++days;
+        }
+
+        bool check = true;
+        for (int x = 0 ; x < num_r ; ++x) {
+            for (int y = 0 ; y < num_c ; ++y) {
+                if (grid[x][y] == 0) {
+                    check = false;
+                    break;
+                }
+            }
+        }
+
+        return (check) ? days : -1;
+    }
+
+private:
+    std::vector<std::vector<int>> directs;
+};
