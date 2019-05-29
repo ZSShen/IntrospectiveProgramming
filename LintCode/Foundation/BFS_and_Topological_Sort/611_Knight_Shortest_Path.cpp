@@ -10,6 +10,19 @@
 
 class Solution {
 public:
+    Solution()
+      : directs({
+        {1, 2},
+        {1, -2},
+        {-1, 2},
+        {-1, -2},
+        {2, 1},
+        {2, -1},
+        {-2, 1},
+        {-2, -1}
+      })
+    { }
+
     /**
      * @param grid: a chessboard included 0 (false) and 1 (true)
      * @param source: a point
@@ -29,48 +42,47 @@ public:
             return -1;
         }
 
-        std::queue<std::pair<Point, int>> queue;
-        queue.push(std::make_pair(source, 0));
+        std::queue<Point> queue;
+        queue.push(source);
 
         grid[source.x][source.y] = true;
 
-        std::vector<std::vector<int>> direct;
-        direct.push_back({1, 2});
-        direct.push_back({1, -2});
-        direct.push_back({-1, 2});
-        direct.push_back({-1, -2});
-        direct.push_back({2, 1});
-        direct.push_back({2, -1});
-        direct.push_back({-2, 1});
-        direct.push_back({-2, -1});
+        int step = 0;
 
         while (!queue.empty()) {
-            auto pair = queue.front();
-            queue.pop();
+            ++step;
+            int size = queue.size();
 
-            int o_x = pair.first.x;
-            int o_y = pair.first.y;
-            int step = pair.second;
+            for (int i = 0 ; i < size ; ++i) {
+                auto front = queue.front();
+                queue.pop();
 
-            for (int i = 0 ; i < 8 ; ++i) {
-                int n_x = o_x + direct[i][0];
-                int n_y = o_y + direct[i][1];
+                int x = front.x;
+                int y = front.y;
 
-                if (n_x < 0 || n_x >= num_r ||
-                    n_y < 0 || n_y >= num_c ||
-                    grid[n_x][n_y]) {
-                    continue;
+                for (const auto& direct : directs) {
+                    int nx = x + direct[0];
+                    int ny = y + direct[1];
+
+                    if (!(nx >= 0 && nx < num_r && ny >= 0 && ny < num_c) ||
+                        grid[nx][ny]) {
+                        continue;
+                    }
+
+                    if (nx == destination.x && ny == destination.y) {
+                        return step;
+                    }
+
+                    grid[nx][ny] = true;
+                    queue.push(Point(nx, ny));
                 }
 
-                if (n_x == destination.x && n_y == destination.y) {
-                    return step + 1;
-                }
-
-                queue.push(std::make_pair(Point(n_x, n_y), step + 1));
-                grid[n_x][n_y] = true;
             }
         }
 
         return -1;
     }
+
+private:
+    std::vector<std::vector<int>> directs;
 };
