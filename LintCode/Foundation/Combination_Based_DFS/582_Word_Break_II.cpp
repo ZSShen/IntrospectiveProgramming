@@ -53,3 +53,56 @@ private:
         return collect;
     }
 };
+
+
+class Solution {
+public:
+    /*
+     * @param s: A string
+     * @param wordDict: A set of words.
+     * @return: All possible sentences.
+     */
+    vector<string> wordBreak(string &s, unordered_set<string> &wordDict) {
+        // write your code here
+
+        std::unordered_map<std::string, std::vector<std::string>> memo;
+        return runBacktracking(s, wordDict, memo);
+    }
+
+private:
+    std::vector<std::string> runBacktracking(
+            const std::string& str,
+            std::unordered_set<std::string>& dict,
+            std::unordered_map<std::string, std::vector<std::string>>& memo) {
+
+        if (memo.count(str) == 1) {
+            return memo[str];
+        }
+
+        if (str.empty()) {
+            return {""};
+        }
+
+        std::vector<std::string> combinations;
+
+        int len = str.length();
+        for (int i = 1 ; i <= len ; ++i) {
+            auto prefix = str.substr(0, i);
+
+            if (dict.count(prefix) == 0) {
+                continue;
+            }
+
+            auto suffix = str.substr(i, len - i);
+            memo[suffix] = runBacktracking(suffix, dict, memo);
+
+            for (const auto& result : memo[suffix]) {
+                std::string merge(prefix);
+                merge += (result != "") ? " " + result : "";
+                combinations.emplace_back(std::move(merge));
+            }
+        }
+
+        return combinations;
+    }
+};
