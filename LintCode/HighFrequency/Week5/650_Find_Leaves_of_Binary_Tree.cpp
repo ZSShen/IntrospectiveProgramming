@@ -38,16 +38,11 @@ public:
         }
 
         std::unordered_map<int, std::vector<int>> map;
-        findHeights(root, map);
-
-        std::set<int> keys;
-        for (const auto& pair : map) {
-            keys.emplace(pair.first);
-        }
+        int height = findHeights(root, map);
 
         std::vector<std::vector<int>> ans;
-        for (const auto& key : keys) {
-            ans.emplace_back(std::move(map[key]));
+        for (int i = 1 ; i <= height ; ++i) {
+            ans.emplace_back(std::move(map[i]));
         }
 
         return ans;
