@@ -22,7 +22,7 @@ public:
     /*
     * @param root: The root of binary tree.
     */
-    BSTIterator(TreeNode * root) { 
+    BSTIterator(TreeNode * root) {
 
         while (root) {
             stack.push(root);
@@ -35,7 +35,7 @@ public:
      */
     bool hasNext() {
         // write your code here
-    
+
         return !stack.empty();
     }
 
@@ -47,16 +47,16 @@ public:
 
         /**
          *       10
-         *     /    \       s: 
+         *     /    \       s:
          *    5     19      v:
          *   / \   /  \
          *  2  11 -2   6
          *   \
-         *    8                 
+         *    8
          */
 
         auto next = stack.top();
-        stack.top();
+        stack.pop();
 
         auto curr = next->right;
         while (curr) {
