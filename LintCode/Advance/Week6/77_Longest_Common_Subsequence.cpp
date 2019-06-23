@@ -9,24 +9,19 @@ public:
         // write your code here
 
         /**
-         *  dp[i][j]: The LCS among the strings A[0][i] and B[0][j].
+         *  dp[i][j]: The LCS of the substrings A(0, i) and B(0, j).
          *
-         *             | if A[i] == B[j], dp[i - 1][j - 1] + 1
-         *  dp[i][j] = | else,            Max(dp[i - 1][j], dp[i][j - 1])
-         *
+         *  dp[i][j] = | if A[i] == B[j], dp[i - 1][j - 1] + 1
+         *             | MAX(dp[i - 1][j], dp[i][j - 1])
          */
 
-        int a = A.length();
-        int b = B.length();
+        int na = A.size();
+        int nb = B.size();
 
-        if (a == 0 || b == 0) {
-            return 0;
-        }
+        std::vector<std::vector<int>> dp(na + 1, std::vector<int>(nb + 1, 0));
 
-        int dp[a + 1][b + 1] = {{0}};
-
-        for (int i = 1 ; i <= a ; ++i) {
-            for (int j = 1 ; j <= b ; ++j) {
+        for (int i = 1 ; i <= na ; ++i) {
+            for (int j = 1 ; j <= nb ; ++j) {
                 if (A[i - 1] == B[j - 1]) {
                     dp[i][j] = dp[i - 1][j - 1] + 1;
                 } else {
@@ -35,6 +30,6 @@ public:
             }
         }
 
-        return dp[a][b];
+        return dp[na][nb];
     }
 };
