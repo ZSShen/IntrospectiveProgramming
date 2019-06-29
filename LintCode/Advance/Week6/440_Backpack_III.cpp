@@ -10,14 +10,12 @@ public:
         // write your code here
 
         /**
+         * dp[i][j]: The max values we can get from the first i items with
+         *           the knapsack that can hold j units of weight.
          *
-         * dp[i][j]: The max value we can get among the first i items when we
-         *           use the knapsack with j units of capacity.
          *
-         *
-         * dp[i][j] = | if A[i - 1] > j, dp[i - 1][j]
-         *            | else           , Max | dp[i][j - A[i - 1]] + V[i - 1]
-         *                                   | dp[i - 1][j]
+         * dp[i][j] = | if W[i] > j, dp[i - 1][j]
+         *            | MAX {dp[i - 1][j], V[i] + dp[i][j - W[i]] }
          */
 
         int n = A.size();
@@ -25,25 +23,17 @@ public:
             return 0;
         }
 
-        int dp[n + 1][m + 1];
-
-        dp[0][0] = 0;
-        for (int i = 1 ; i <= n ; ++i) {
-            dp[i][0] = 0;
-        }
-        for (int i = 1 ; i <= m ; ++i) {
-            dp[0][i] = 0;
-        }
+        std::vector<std::vector<int>> dp(n + 1, std::vector<int>(m + 1, 0));
 
         for (int i = 1 ; i <= n ; ++i) {
             for (int j = 1 ; j <= m ; ++j) {
+
                 if (A[i - 1] > j) {
                     dp[i][j] = dp[i - 1][j];
                     continue;
                 }
 
-                dp[i][j] = std::max(
-                    dp[i][j - A[i - 1]] + V[i - 1], dp[i - 1][j]);
+                dp[i][j] = std::max(dp[i - 1][j], V[i - 1] + dp[i][j - A[i - 1]]);
             }
         }
 

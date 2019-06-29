@@ -1,22 +1,12 @@
 class Solution {
 public:
     /**
-     * @param nums: an integer array and all positive numbers, no duplicates
+     * @param nums: an integer array and all positive numbers
      * @param target: An integer
      * @return: An integer
      */
-    int backPackIV(vector<int> &nums, int target) {
+    int backPackV(vector<int> &nums, int target) {
         // write your code here
-
-        /**
-         * dp[i][j]: The number of ways to fill the knapsack with size j using
-         *           the first i items.
-         *
-         * dp[i][j] = | if nums[i] > j, dp[i - 1][j]
-         *            | else          , dp[i - 1][j] + dp[i][j - nums[i]]
-         *
-         *
-         */
 
         int n = nums.size();
         if (n == 0) {
@@ -37,7 +27,7 @@ public:
                     continue;
                 }
 
-                dp[i][j] = dp[i - 1][j] + dp[i][j - nums[i - 1]];
+                dp[i][j] = dp[i - 1][j] + dp[i - 1][j - nums[i - 1]];
             }
         }
 
