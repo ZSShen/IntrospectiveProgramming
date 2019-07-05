@@ -17,17 +17,17 @@ public:
          *  => prefix(j) = prefix(i - 1)
          */
 
-        std::unordered_map<int, int> map;
-        int sum = 0;
         int size = nums.size();
+
+        int sum = 0;
+        std::unordered_map<int, int> map;
+        map[0] = -1;
+
         for (int i = 0 ; i < size ; ++i) {
             sum += nums[i];
 
             if (map.count(sum) == 1) {
-                std::vector<int> ans;
-                ans.push_back(map[sum] + 1);
-                ans.push_back(i);
-                return ans;
+                return {map[sum] + 1, i};
             }
 
             map[sum] = i;

@@ -8,13 +8,21 @@ public:
         // write your code here
 
         /**
-         * dp[i][j]: The length of the LRS of the substrings s(0, i) andvs(0, j).
+         * dp[i][j]: The length of the longest common subsequence that can
+         *           be found in the prefix of str ending at the index i and
+         *           the prefix of str ending at the index j.
          *
-         * dp[i][j] = | dp[i - 1][j - 1] + 1           ,if s[i] == s[j], i != j.
-         *            | MAX{dp[i][j - 1], dp[i - 1][j]}, else
+         * dp[i][j] = | if s[i] == s[j], | if i != j, dp[i - 1][j - 1] + 1
+         *            |                  | otherwise, 0
+         *            |
+         *            | otherwise      , MAX{ dp[i][j - 1], dp[i - 1][j] }
          */
 
         int n = str.length();
+        if (n == 0) {
+            return 0;
+        }
+
         std::vector<std::vector<int>> dp(n + 1, std::vector<int>(n + 1, 0));
 
         for (int i = 1 ; i <= n ; ++i) {

@@ -8,12 +8,18 @@ public:
         // write your code here
 
         /**
-         *   4, 2, 4, 5, 3, 7
+         *   4 2 4 5 3 7
          *
-         *  dp[1]: 2
-         *  dp[2]: 3
-         *  dp[3]: 5
-         *  dp[4]: 7
+         *  dp[0] [1] [2] [3]
+         *     4
+         *     2
+         *     2   4
+         *     2   4   5
+         *     2   3   5
+         *     2   3   5   7
+         *
+         *
+         *   O(nlogn)
          */
 
         int n = nums.size();
@@ -25,25 +31,28 @@ public:
         lis.push_back(nums[0]);
 
         for (int i = 1 ; i < n ; ++i) {
+
             if (nums[i] > lis.back()) {
                 lis.push_back(nums[i]);
                 continue;
             }
 
+            int cand = nums[i];
+
             int l = 0, r = lis.size() - 1;
             while (l + 1 < r) {
                 int m = (l + r) / 2;
-                if (nums[i] >= lis[m]) {
+                if (cand >= lis[m]) {
                     l = m;
                 } else {
                     r = m;
                 }
             }
 
-            if (nums[i] < lis[l]) {
-                lis[l] = nums[i];
-            } else if (nums[i] < lis[r]) {
-                lis[r] = nums[i];
+            if (cand > lis[l]) {
+                lis[r] = cand;
+            } else {
+                lis[l] = cand;
             }
         }
 

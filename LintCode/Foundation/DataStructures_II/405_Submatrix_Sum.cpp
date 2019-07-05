@@ -64,13 +64,17 @@ public:
          *  sum(i, j) = prefix(j) - prefix(i - 1)
          *  sum(i, j) = 0 => prefix(j) = prefix(i - 1)
          *
-         *  a1 b1    s1
-         *  a2 b2    s2
-         *  a3 b3 => s3   syn(s2, si) => matrix[a2, b2, ai, bi]
-         *  .  .     .
-         *  .  .     .
-         *  ai bi    si
+         *   a b c d      (a + b) -> A
+         *   e f g h  =>  (e + f) -> B
+         *   i j k l      (i + j) -> C
+         *   m n o p      (m + n) -> D
          *
+         *   Suppose that we want to scan the matrixes spanning from the
+         *   first 2 columns, we can generate a synthetic column which merges
+         *   these 2 columns and then apply the 1D solution we use to solve
+         *   subarray sum problem to scan this synthetic column.
+         *
+         *   O(C^2 * R)
          */
 
         int num_r = matrix.size();

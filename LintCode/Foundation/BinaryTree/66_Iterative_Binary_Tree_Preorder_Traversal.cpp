@@ -19,40 +19,27 @@ public:
      */
     vector<int> preorderTraversal(TreeNode * root) {
         // write your code here
-        
-        /**
-         *       10
-         *     /    \       s: 
-         *    5     19      v:
-         *   / \   /  \
-         *  2  11 -2   6
-         *   \
-         *    8                 
-         */
-    
-        std::vector<int> ans;
+
         if (!root) {
-            return ans;
+            return {};
         }
-        
-        std::stack<TreeNode*> stack;
-        stack.push(root);
 
-        while (!stack.empty()) {
+        std::vector<int> ans;
+        std::stack<TreeNode*> stk;
+        stk.push(root);
 
-            // Visit.
-            auto top = stack.top();
-            stack.pop();
-            ans.push_back(top->val);
+        while (!stk.empty()) {
 
-            // Try to go right.
-            if (top->right) {
-                stack.push(top->right);
+            auto curr = stk.top();
+            stk.pop();
+
+            ans.push_back(curr->val);
+
+            if (curr->right) {
+                stk.push(curr->right);
             }
-            
-            // Try to go left.
-            if (top->left) {
-                stack.push(top->left);
+            if (curr->left) {
+                stk.push(curr->left);
             }
         }
 

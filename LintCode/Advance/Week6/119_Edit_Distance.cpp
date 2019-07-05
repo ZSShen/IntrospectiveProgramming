@@ -5,43 +5,49 @@ public:
      * @param word2: A string
      * @return: The minimum number of steps.
      */
-    int minDistance(string &S, string &T) {
+    int minDistance(string &s, string &t) {
         // write your code here
 
         /**
+         * dp[i][j]: The minimum costs to transform the prefix of A ending at
+         *           the index i to the prefix of B ending at the index j.
          *
-         * dp[i][j]: The min cost to transform the S[0][i] to T[0][j]
-         *
-         *            | if S[i] == T[j], dp[i - 1][j - 1]
-         * dp[i][j] = | else,   | dp[i - 1][j]
-         *                  Min | dp[i - 1][j - 1]  + 1
-         *                      | dp[i][j - 1]
+         *  dp[i][i] = | if A[i] == B[j], dp[i - 1][j - 1]
+         *             | otherwise      , MIN | 1 + dp[i - 1][j - 1], replace A[i].
+         *                                    | 1 + dp[i][j - 1]    , insert a letter.
+         *                                    | 1 + dp[i - 1][j]    , delete a letter.
          */
 
+        int ns = s.length();
+        int nt = t.length();
 
-        int s = S.length();
-        int t = T.length();
+        std::vector<std::vector<int>> dp(ns + 1, std::vector<int>(nt + 1));
 
-        int dp[s + 1][t + 1] = {{0}};
-
-        for (int i = 1 ; i <= s ; ++i) {
-            dp[i][0] = i;
-        }
-        for (int i = 1 ; i <= t ; ++i) {
+        for (int i = 0 ; i <= nt ; ++i) {
             dp[0][i] = i;
         }
+        for (int i = 0 ; i <= ns ; ++i) {
+            dp[i][0] = i;
+        }
 
-        for (int i = 1 ; i <= s ; ++i) {
-            for (int j = 1 ; j <= t ; ++j) {
-                if (S[i - 1] == T[j - 1]) {
+        for (int i = 1 ; i <= ns ; ++i) {
+            for (int j = 1 ; j <= nt ; ++j) {
+
+                if (s[i - 1] == t[j - 1]) {
                     dp[i][j] = dp[i - 1][j - 1];
                 } else {
-                    dp[i][j] = std::min(dp[i - 1][j], dp[i - 1][j - 1]);
-                    dp[i][j] = std::min(dp[i][j], dp[i][j - 1]) + 1;
+                    int cost = dp[i - 1][j - 1];
+                    if (dp[i][j - 1] < cost) {
+                        cost = dp[i][j - 1];
+                    }
+                    if (dp[i - 1][j] < cost) {
+                        cost = dp[i - 1][j];
+                    }
+                    dp[i][j] = cost + 1;
                 }
             }
         }
 
-        return dp[s][t];
+        return dp[ns][nt];
     }
 };

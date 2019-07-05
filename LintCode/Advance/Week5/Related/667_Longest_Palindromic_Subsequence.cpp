@@ -8,13 +8,12 @@ public:
         // write your code here
 
         /**
-         *
          * dp[i][j]: The length of the longest palindromic subsequence in
          *           the substring starting at the index i and ending at the
          *           index j.
          *
-         * dp[i][j] = MAX | if s[i] == s[j], 2 + dp[i + 1][j - 1]
-         *                | else, MAX{dp[i + 1][j], dp[i][j - 1]}
+         * dp[i][j] = | if s[i] == s[j], 2 + dp[i + 1][j - 1]
+         *            | otherwise      , max{ dp[i][j - 1], dp[i + 1][j] }
          */
 
         int n = s.length();
@@ -22,21 +21,19 @@ public:
             return 0;
         }
 
-        std::vector<std::vector<int>> dp(n, std::vector<int>(n, 1));
+        std::vector<std::vector<int>> dp(n, std::vector<int>(n, 0));
 
-        for (int i = 0 ; i < n - 1 ; ++i) {
-            if (s[i] == s[i + 1]) {
-                dp[i][i + 1] = 2;
-            }
+        for (int i = 0 ; i < n ; ++i) {
+            dp[i][i] = 1;
         }
 
-        for (int l = 3 ; l <= n ; ++l) {
+        for (int l = 2 ; l <= n ; ++l) {
             for (int i = 0, j = i + l - 1 ; i <= n - l ; ++i, ++j) {
-                int lps = std::max(dp[i + 1][j], dp[i][j - 1]);
-                if (s[i] == s[j] && dp[i + 1][j - 1] + 2 > lps) {
-                    lps = dp[i + 1][j - 1] + 2;
+                if (s[i] == s[j]) {
+                    dp[i][j] = 2 + dp[i + 1][j - 1];
+                } else {
+                    dp[i][j] = std::max(dp[i][j - 1], dp[i + 1][j]);
                 }
-                dp[i][j] = lps;
             }
         }
 

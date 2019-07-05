@@ -19,34 +19,38 @@ public:
      */
     vector<int> postorderTraversal(TreeNode * root) {
         // write your code here
-        
-        // Initial construction.
-        std::stack<TreeNode*> stack;
-        findSucessor(root, stack);
+
+        if (!root) {
+            return {};
+        }
 
         std::vector<int> ans;
-        while (!stack.empty()) {
-            auto curr = stack.top();
-            stack.pop();
+        std::stack<TreeNode*> stk;
+        findSuccessor(root, stk);
+
+        while (!stk.empty()) {
+
+            auto curr = stk.top();
+            stk.pop();
+
             ans.push_back(curr->val);
-            
-            if (!stack.empty()) {
-                auto parent = stack.top();
-                if (parent->left == curr) {
-                    findSucessor(parent->right, stack);
+
+            if (!stk.empty()) {
+                if (stk.top()->left == curr) {
+                    findSuccessor(stk.top()->right, stk);
                 }
             }
         }
 
-        return ans;        
+        return ans;
     }
 
 private:
-    void findSucessor(TreeNode* root, std::stack<TreeNode*>& stack) {
-        
+    void findSuccessor(TreeNode* root, std::stack<TreeNode*>& stk) {
+
         while (root) {
-            stack.push(root);
-            
+            stk.push(root);
+
             if (root->left) {
                 root = root->left;
             } else {

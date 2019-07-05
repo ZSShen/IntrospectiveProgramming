@@ -12,30 +12,30 @@ public:
             return {-1, -1};
         }
 
-        int sum = 0;
-        int max = A[0];
-        int bgn = 0, end = 0, max_bgn = 0, max_end = 0;
+        int max = A[0], max_bgn = 0, max_end = 0;
+        int sum = 0, bgn = 0, end = 0;
 
-        for (int i = 0 ; i < n ; ++i) {
-            sum += A[i];
+        while (end < n) {
+            sum += A[end];
 
             if (sum > max) {
                 max = sum;
-                end = i;
                 max_bgn = bgn;
                 max_end = end;
             }
 
+            ++end;
+
             /**
-             *  A, n
+             * A, B
              *
-             * n > 0,           A + n > A
-             * n < 0, |n| > A,  A + n < 0
+             * A > 0, B > 0,           A + B > A
+             * A > 0, B < 0, |B| > A,  A + B < 0
              */
 
             if (sum < 0) {
-                sum = 0 ;
-                bgn = i + 1;
+                sum = 0;
+                bgn = end;
             }
         }
 

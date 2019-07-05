@@ -9,10 +9,10 @@ public:
         // write your code here
 
         /**
-         *  dp[i][j]: The LCS of the substrings A(0, i) and B(0, j).
+         *  dp[i][j]: The LCS of the prefixes A(0, i) and B(0, j).
          *
          *  dp[i][j] = | if A[i] == B[j], dp[i - 1][j - 1] + 1
-         *             | MAX(dp[i - 1][j], dp[i][j - 1])
+         *             | Otherwise      , MAX(dp[i - 1][j], dp[i][j - 1])
          */
 
         int na = A.size();

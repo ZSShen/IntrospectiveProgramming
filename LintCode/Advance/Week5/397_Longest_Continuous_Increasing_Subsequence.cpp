@@ -8,10 +8,11 @@ public:
         // write your code here
 
         /**
-         *  dp[i]: The length of the curr CIS ending at the index i.
+         *  dp[i]: The length of the current continuous subsequence (substring)
+         *         ending at the index i.
          *
-         *  dp[i] = | A[i] > A[i + 1] , dp[i] = dp[i - 1] + 1.
-         *          | else            , dp[i] = 1.
+         *  dp[i] = | if A[i] > A[i + 1] , dp[i] = dp[i - 1] + 1.
+         *          | otherwise          , dp[i] = 1.
          */
 
         int n = A.size();

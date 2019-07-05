@@ -83,7 +83,7 @@ public:
 
             for (int j = i ; j < num_c ; ++j) {
 
-                // Initialize a new synthetic array.
+                // Initialize a new synthetic column.
                 for (int k = 0 ; k < num_r ; ++k) {
                     syn[k] += matrix[k][j];
                 }
@@ -103,8 +103,8 @@ private:
         /**
          *   A, B
          *
-         *   A > 0, B > 0, A + B
-         *   A > 0, B < 0, A + B < A
+         *   A > 0, B > 0           ,  A + B > A
+         *   A > 0, B < 0 && |B| > A,  A + B < 0
          */
 
         int size = array.size();

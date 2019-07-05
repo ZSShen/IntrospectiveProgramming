@@ -8,45 +8,49 @@ public:
         // write your code here
 
         /**
+         * palin[i][j]: Whether the substring starting at the index i and
+         *              ending at the index j is palindromic.
          *
-         * Let dp[i][j] record if the substring starting from i and ending at j
-         * is a palindromic substring.
+         * palin[i][j] = s[i] == s[j] && palin[i + 1][j - 1]
          *
-         * Objective Function:
-         * dp[i][j] = s[i] == s[j] && dp[i + 1][j - 1]
-         *
+         * Since the beginning and the ending offsets already show the
+         * length of this palindromic substring, we do not need an extra
+         * data structure to record the length information.
          */
 
-        int size = s.length();
-        if (size == 0) {
+        int n = s.length();
+        if (n == 0) {
             return "";
         }
 
-        bool dp[size][size] = {{0}};
-        int start = 0, longest = 1;
+        std::vector<std::vector<bool>> palin(n, std::vector<bool>(n, false));
 
-        for (int i = 0 ; i < size ; ++i) {
-            dp[i][i] = true;
-        }
+        int lps = 1;
+        int bgn = 0;
 
-        for (int i = 1 ; i < size ; ++i) {
-            if (s[i - 1] == s[i]) {
-                dp[i - 1][i] = true;
-                start = i - 1;
-                longest = 2;
-            }
-        }
-
-        for (int l = 2 ; l < size ; ++l) {
-            for (int i = 0, j = i + l ; i < size - l ; ++i, ++j) {
-                if (s[i] == s[j] && dp[i + 1][j - 1]) {
-                    dp[i][j] = true;
-                    start = i;
-                    longest = l + 1;
+        for (int i = 0 ; i < n ; ++i) {
+            palin[i][i] = true;
+            if (i < n - 1) {
+                if (s[i] == s[i + 1]) {
+                    palin[i][i + 1] = true;
+                    lps = 2;
+                    bgn = i;
                 }
             }
         }
 
-        return s.substr(start, longest);
+        for (int l = 3 ; l <= n ; ++l) {
+            for (int i = 0, j = i + l - 1 ; i <= n - l ; ++i, ++j) {
+                if (s[i] == s[j] && palin[i + 1][j - 1]) {
+                    palin[i][j] = true;
+                    if (l > lps) {
+                        lps = l;
+                        bgn = i;
+                    }
+                }
+            }
+        }
+
+        return s.substr(bgn, lps);
     }
 };

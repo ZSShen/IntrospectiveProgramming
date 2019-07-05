@@ -30,6 +30,8 @@ public:
     int longestContinuousIncreasingSubsequence2(vector<vector<int>> &matrix) {
         // write your code here
 
+        // Dynamic Programming + Priority Queue
+
         int num_r = matrix.size();
         if (num_r == 0) {
             return 0;
