@@ -20,6 +20,7 @@ public:
         // write your code here
 
         std::unordered_set<ParentTreeNode*> set;
+
         auto curr = A;
         while (curr) {
             set.insert(curr);

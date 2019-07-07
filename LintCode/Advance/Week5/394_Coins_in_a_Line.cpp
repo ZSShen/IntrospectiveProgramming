@@ -8,23 +8,23 @@ public:
         // write your code here
 
         /**
-         *              4(L)
-         *            /   \
-         *       (W)3       2(W)
-         *        /   \   /   \
-         *   (W)2       11     0(L)
-         *    /   \   (W)(W)
-         *  1(W)   0(L)
+         *  A and B 2 competitors
          *
+         *  1. If A can push B to step into a losable state, A is winnable.
          *
-         *  dp[i]: Whether a person is winable when there are i coins remained.
+         *  2. No matter how hard A tries, B can always step into a winnable
+         *     state. Then, A is guaranteed to lose the game.
          *
-         *  dp[i] = dp[i - 1] == false || dp[i - 2] == false
+         *             4(W)
+         *            / \
+         *        (L)3   2(W)
+         *          / \
+         *      (W)2   1(W)
          *
-         *  dp[0] = false
-         *  dp[1] = true
-         *  dp[2] = true
+         *  dp[i]: Whether a player is going to win the game if there are i
+         *         coins in a line.
          *
+         *  dp[i] = dp[i - 1] == False || dp[i - 2] == False
          */
 
         if (n == 0) {
@@ -44,5 +44,34 @@ public:
         }
 
         return dp[n % 3];
+    }
+};
+
+
+class Solution {
+public:
+    /**
+     * @param n: An integer
+     * @return: A boolean which equals to true if the first player will win
+     */
+    bool firstWillWin(int n) {
+        // write your code here
+
+        if (n == 0) {
+            return false;
+        }
+        if (n == 1 || n == 2) {
+            return true;
+        }
+
+        std::vector<bool> dp(n + 1, false);
+        dp[1] = true;
+        dp[2] = true;
+
+        for (int i = 3 ; i <= n ; ++i) {
+            dp[i] = dp[i - 1] == false || dp[i - 2] == false;
+        }
+
+        return dp[n];
     }
 };

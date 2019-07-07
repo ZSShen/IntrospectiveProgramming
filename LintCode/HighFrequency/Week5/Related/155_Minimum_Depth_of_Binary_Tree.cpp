@@ -20,6 +20,8 @@ public:
     int minDepth(TreeNode * root) {
         // write your code here
 
+        // Preorder Traversal + Height Comparison
+
         if (!root) {
             return 0;
         }
@@ -31,8 +33,7 @@ public:
     }
 
 private:
-    void runPreOrder(
-            TreeNode* root, int h, int& ans) {
+    void runPreOrder(TreeNode* root, int h, int& ans) {
 
         if (!root->left && !root->right) {
             ans = std::min(h, ans);
