@@ -1,5 +1,4 @@
 
-
 struct TrieNode {
     bool is_word;
     std::unordered_map<char, std::shared_ptr<TrieNode>> branch;
@@ -25,10 +24,10 @@ public:
         // write your code here
 
         auto curr = root;
+
         for (char ch : word) {
             if (curr->branch.count(ch) == 0) {
-                curr->branch.insert(
-                    std::make_pair(ch, std::make_shared<TrieNode>()));
+                curr->branch[ch] = std::make_shared<TrieNode>();
             }
             curr = curr->branch[ch];
         }
@@ -44,6 +43,7 @@ public:
         // write your code here
 
         auto curr = root;
+
         for (char ch : word) {
             if (curr->branch.count(ch) == 0) {
                 return false;
@@ -62,6 +62,7 @@ public:
         // write your code here
 
         auto curr = root;
+
         for (char ch : prefix) {
             if (curr->branch.count(ch) == 0) {
                 return false;

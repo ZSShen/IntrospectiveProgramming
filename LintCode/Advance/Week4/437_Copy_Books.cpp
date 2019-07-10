@@ -9,21 +9,15 @@ public:
         // write your code here
 
         /**
-         *  n piles of books, k copiers
+         *  Given N books, K copiers, and the total number of pages is S. We
+         *  need to find the shortest time period for the slowest copier to
+         *  finish his work.
          *
-         *  T =   MAX (Bi)
-         *      1<=i<=n
-         *
-         *  B1, B2, ..., Bn
-         *
-         *  O(nk)
-         *
-         *  3, 2, 4
-         *
-         *  l = 1, r = 9
-         *  m = (l + r) / 2 = 2
-         *
-         *  O(nlogk)
+         *  Let the candidate period be T, we can gradually increase T from 1
+         *  to S to check whether all the copiers can finish their works with
+         *  this time period. Hence, we get an O(NS) algorithm. However, we
+         *  still can boost the performance by estimating the ideal T with
+         *  binary approximation, thus acquiring a O(NlogS) solution.
          */
 
         if (books.empty() || k == 0) {
