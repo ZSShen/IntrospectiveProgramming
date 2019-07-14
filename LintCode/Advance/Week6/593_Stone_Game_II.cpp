@@ -1,9 +1,5 @@
 class Solution {
 public:
-    Solution()
-      : int_max(std::numeric_limits<int>::max())
-    { }
-
     /**
      * @param A: An integer array
      * @return: An integer
@@ -13,14 +9,15 @@ public:
 
         /**
          *     A
-         *  B     C
-         *           => A B C D E => A B C D E A B C D E
-         *   D   E
+         *              A good way to break the loop is to flatten the loop
+         *  B     E     with 2 consecutive replicas.
          *
-         * dp[i][j]: The min number of scores that we can get from the
+         *   C   D      => A B C D E A B C D E
+         *
+         * dp[i][j]: The minimum cost to merge the piles starting from the
          *           ith pile to the jth pile.
          *
-         * dp[i][j] =  MIN { dp[i][k] + dp[k+1][j] + sum(i, j) }
+         * dp[i][j] =  MIN { dp[i][k] + dp[k + 1][j] + sum(i, j) }
          *            i<=k<j
          */
 
@@ -40,32 +37,29 @@ public:
             }
         }
 
-        std::vector<std::vector<int>> dp(nn, std::vector<int>(nn, int_max));
-        for (int i = 0 ; i < nn ; ++i) {
-            dp[i][i] = 0;
-            if (i < nn  - 1) {
-                dp[i][i + 1] = A[i] + A[i + 1];
-            }
+        std::vector<std::vector<int>> dp(nn, std::vector<int>(nn, 0));
+        for (int i = 1 ; i < nn ; ++i) {
+            dp[i - 1][i] = prefix[i + 1] - prefix[i - 1];
         }
 
-        for (int l = 3 ; l <= nn ; ++l) {
+        for (int l = 3 ; l <= n ; ++l) {
             for (int i = 0, j = i + l - 1 ; i <= nn - l ; ++i, ++j) {
+                int min = std::numeric_limits<int>::max();
+                int sum = prefix[j + 1] - prefix[i];
+
                 for (int k = i ; k < j ; ++k) {
-                    dp[i][j] = std::min(
-                        dp[i][j],
-                        dp[i][k] + dp[k + 1][j] + prefix[j + 1] - prefix[i]);
+                    min = std::min(min, dp[i][k] + dp[k + 1][j] + sum);
                 }
+
+                dp[i][j] = min;
             }
         }
 
-        int ans = int_max;
+        int ans = std::numeric_limits<int>::max();
         for (int i = 0 ; i < n ; ++i) {
             ans = std::min(ans, dp[i][i + n - 1]);
         }
 
         return ans;
     }
-
-private:
-    int int_max;
 };

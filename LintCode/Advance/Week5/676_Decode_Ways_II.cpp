@@ -119,6 +119,8 @@ private:
             return 0;
         }
 
+        // Here, s[p1] == '*'.
+
         if ('0' <= s[p2] && s[p2] <= '6') {
             return 2;
         }

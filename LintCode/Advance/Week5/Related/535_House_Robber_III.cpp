@@ -27,8 +27,8 @@ public:
          *    / \   / \
          *   D   E F   G
          *
-         * dp[c]: The max number of money the robber can rob in the subtree
-         *           rooted by c.
+         * dp[c]: The maximum profits that we can aggregate in the subtree
+         *        rooted by c.
          *
          * dp[c] = MAX | c->val + dp[c->l->l] + dp[c->l->r] + dp[c->r->r] + dp[c->r->l]
          *             | dp[c->l] + dp[c->r]
@@ -49,14 +49,20 @@ private:
             return memo[root];
         }
 
-        int ll = (root->left)? runPostOrder(root->left->left, memo) : 0;
-        int lr = (root->left)? runPostOrder(root->left->right, memo) : 0;
-        int rr = (root->right)? runPostOrder(root->right->right, memo) : 0;
-        int rl = (root->right)? runPostOrder(root->right->left, memo) : 0;
+        int l = 0, ll = 0, lr = 0, r = 0, rr = 0, rl = 0;
 
-        int max = std::max(
-            root->val + ll + lr + rr + rl,
-            runPostOrder(root->left, memo) + runPostOrder(root->right, memo));
+        if (root->left) {
+            l = runPostOrder(root->left, memo);
+            ll = runPostOrder(root->left->left, memo);
+            lr = runPostOrder(root->left->right, memo);
+        }
+        if (root->right) {
+            r = runPostOrder(root->right, memo);
+            rr = runPostOrder(root->right->right, memo);
+            rl = runPostOrder(root->right->left, memo);
+        }
+
+        int max = std::max(root->val + ll + lr + rr + rl, l + r);
 
         memo[root] = max;
         return max;

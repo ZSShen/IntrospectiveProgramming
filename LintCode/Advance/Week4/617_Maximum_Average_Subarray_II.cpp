@@ -8,56 +8,66 @@ public:
     double maxAverage(vector<int> &nums, int k) {
         // write your code here
 
-        if (nums.empty() || k == 0) {
+        /**
+         * Use binary approximation, and then we transform the problem into
+         * checking if it is possible to find a subarray whose average sum
+         * is equal to or less than T.
+         *
+         *     A[i] + ... + A[j] / (j - i + 1) >= T , (j - i + 1) >= k
+         *  => A[i] + ... + A[j] >= T + ... + T
+         *  => (A[i] - T) + ... + (A[j] - T) >= 0
+         *  => B[i] + ... + B[j] >= 0               , (j - i + 1) >= k
+         *
+         *          j             i
+         *  -------------------------
+         *  | MIN | *     MAX     * |
+         *  -------------------------
+         */
+
+        int n = nums.size();
+        if (n == 0 || k == 0) {
             return 0;
         }
 
-        std::vector<double> reps;
-        for (int num : nums) {
-            reps.push_back(num);
-        }
-
-        double l = reps[0];
-        double r = reps[0];
-        for (double num : reps) {
-            l = std::min(l, num);
-            r = std::max(r, num);
+        double l = nums[0], r = nums[0];
+        for (int i = 1 ; i < n ; ++i) {
+            l = std::min(l, static_cast<double>(nums[i]));
+            r = std::max(r, static_cast<double>(nums[i]));
         }
 
         while (l + 1e-5 < r) {
             double m = l + (r - l) / 2;
-            if (canFind(reps, k, m)) {
+
+            if (canFind(nums, k, n, m)) {
                 l = m;
             } else {
                 r = m;
             }
         }
 
-        return canFind(reps, k, r) ? r : l;
+        return canFind(nums, k, n, l) ? l : r;
     }
 
 private:
-    bool canFind(std::vector<double>& nums, int k, double x) {
+    bool canFind(const auto& nums, int k, int n, double x) {
 
         double r_sum = 0, l_sum = 0, min_l_sum = 0;
-        int i, n = nums.size();
 
-        for (i = 0 ; i < k ; ++i) {
-            r_sum += nums[i] - x;
+        for (int i = 0 ; i < k ; ++i) {
+            r_sum += static_cast<double>(nums[i]) - x;
         }
 
-        for (i = k ; i <= n ; ++i) {
-            if (r_sum - min_l_sum >= 0) {
+        for (int i = k ; i < n ; ++i) {
+            if (r_sum >= min_l_sum) {
                 return true;
             }
 
-            if (i < n) {
-                r_sum += nums[i] - x;
-                l_sum += nums[i - k] - x;
-                min_l_sum = std::min(min_l_sum, l_sum);
-            }
+            // B[i] ... B[j]
+            r_sum += static_cast<double>(nums[i]) - x;
+            l_sum += static_cast<double>(nums[i - k]) - x;
+            min_l_sum = std::min(min_l_sum, l_sum);
         }
 
-        return false;
+        return r_sum >= min_l_sum;
     }
 };

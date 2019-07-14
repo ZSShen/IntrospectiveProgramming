@@ -8,29 +8,39 @@ public:
         // write your code here
 
         /**
-         * Range(i, j)
-         * k is the latest balloon among the range that we burst.
+         * | ........ B ....... |
+         * | .... B ........... |
+         * | ............ B ... |
          *
-         * dp[i][j]: The max value we can secure from bursting the balloons
-         *           among the range (i, j).
+         * dp[i][j]: The maximum score that we can secure among the ith balloon
+         *           to the jth balloon.
          *
-         * dp[i][j] =  Max | dp[i][k - 1] + dp[k + 1][j] + N[i - 1] * N[k] * N[j + 1]
-         *            i<=k<=j
+         * Consider k is the last balloon that we can burst among the range(i, j).
+         *
+         * dp[i][j] =  MAX { dp[i][k - 1] + dp[k + 1][j] + nums[i - 1] * nums[k] * nums[j + 1} }
+         *           i<=k<=j
          */
 
         int n = nums.size();
+        if (n == 0) {
+            return 0;
+        }
 
         nums.insert(nums.begin(), 1);
         nums.push_back(1);
 
-        int dp[n + 2][n + 2] = {{0}};
+        std::vector<std::vector<int>> dp(n + 2, std::vector<int>(n + 2, 0));
 
         for (int l = 1 ; l <= n ; ++l) {
             for (int i = 1, j = i + l - 1 ; i <= n - l + 1 ; ++i, ++j) {
+                int max = 0;
+
                 for (int k = i ; k <= j ; ++k) {
-                    dp[i][j] = std::max(dp[i][j],
-                        dp[i][k - 1] + dp[k + 1][j] +  nums[i - 1] * nums[k] * nums[j + 1]);
+                    max = std::max(
+                        max, dp[i][k - 1] + dp[k + 1][j] + nums[i - 1] * nums[k] * nums[j + 1]);
                 }
+
+                dp[i][j] = max;
             }
         }
 

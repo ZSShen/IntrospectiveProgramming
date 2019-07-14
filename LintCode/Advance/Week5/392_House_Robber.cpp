@@ -8,27 +8,25 @@ public:
         // write your code here
 
         /**
+         * dp[i]: The maximum profits that we can aggregate from the first i
+         *        houses.
          *
-         *  dp[i] = Max| price[i] + dp[i - 2]
-         *             | dp[i - 1]
-         *
-         *  dp[0] = price[0]
-         *  dp[1] = Max(price[0], price[1])
+         * dp[i] = MAX{ profit[i] + dp[i - 2], dp[i - 1] }
          */
 
-        int size = A.size();
-        if (size == 0) {
+        int n = A.size();
+        if (n == 0) {
             return 0;
         }
 
-        std::vector<long long> dp(size);
+        std::vector<long long> dp(n, 0);
         dp[0] = A[0];
         dp[1] = std::max(A[0], A[1]);
 
-        for (int i = 2 ; i < size ; ++i) {
+        for (int i = 2 ; i < n ; ++i) {
             dp[i] = std::max(A[i] + dp[i - 2], dp[i - 1]);
         }
 
-        return dp[size - 1];
+        return dp[n - 1];
     }
 };

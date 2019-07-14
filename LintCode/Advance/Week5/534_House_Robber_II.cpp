@@ -8,31 +8,36 @@ public:
         // write your code here
 
         /**
-         *  1. Rob the 1st house, solve the problem within the range (0, n - 2)
-         *  2. Rob the last house, solve the problem within the range (1, n - 1)
+         *       A      =>  The key to break the loop is generating 2
+         *                  subproblems and solving them respectively.
+         *   B       E
+         *              =>  (A B C D) or (B C D E)
+         *     C   D
          *
+         *  1. Rob the 1st house, solve the problem within the range (0, n - 2).
+         *  2. Rob the last house, solve the problem within the range (1, n - 1).
          *
-         *  dp[i] = Max | price(i) + dp[i - 2]
-         *              | dp[i - 1]
+         *  dp[i]: The maximum profits that we can aggregate from the first
+         *         i houses.
          *
+         *  dp[i] = MAX { profit[i] + dp[i - 2], dp[i - 1] }
          */
 
-        int size = nums.size();
-        if (size == 0) {
+        int n = nums.size();
+        if (n == 0) {
             return 0;
         }
-        if (size == 1) {
+        if (n == 1) {
             return nums[0];
         }
 
-        return std::max(rob(nums, 0, size - 2), rob(nums, 1, size - 1));
+        return std::max(rob(nums, n, 0, n - 2), rob(nums, n, 1, n - 1));
     }
 
 private:
-    int rob(const std::vector<int>& nums, int bgn, int end) {
+    int rob(const std::vector<int>& nums, int n, int bgn, int end) {
 
-        int size = nums.size();
-        int dp[size] = {0};
+        std::vector<int> dp(n, 0);
 
         dp[bgn] = nums[bgn];
         dp[bgn + 1] = std::max(nums[bgn], nums[bgn + 1]);
