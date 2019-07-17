@@ -18,50 +18,55 @@
  *     const vector<NestedInteger> &getList() const;
  * };
  */
-
 class NestedIterator {
 public:
-    NestedIterator(vector<NestedInteger> &list) {
+    NestedIterator(vector<NestedInteger> &nestedList) {
         // Initialize your data structure here.
 
-        stack.push(std::make_pair(list.begin(), list.end()));
+        if (!nestedList.empty()) {
+            stk.push(std::make_pair(nestedList.begin(), nestedList.end()));
+        }
     }
 
     // @return {int} the next element in the iteration
     int next() {
         // Write your code here
 
-        return num;
+        return cache;
     }
 
     // @return {boolean} true if the iteration has more element or false
     bool hasNext() {
         // Write your code here
 
-        while (!stack.empty()) {
-            auto top = stack.top();
+        while (!stk.empty()) {
+
+            auto top = stk.top();
+            stk.pop();
             auto& bgn = top.first;
             auto& end = top.second;
-            stack.pop();
 
             if (bgn->isInteger()) {
-                num = bgn->getInteger();
+                cache = bgn->getInteger();
 
                 ++bgn;
                 if (bgn != end) {
-                    stack.push(std::make_pair(bgn, end));
+                    stk.push(std::make_pair(bgn, end));
                 }
 
                 return true;
             }
 
-            auto& list = const_cast<std::vector<NestedInteger>&>(bgn->getList());
+            auto& list =
+                const_cast<std::vector<NestedInteger>&>(bgn->getList());
+
             ++bgn;
             if (bgn != end) {
-                stack.push(std::make_pair(bgn, end));
+                stk.push(std::make_pair(bgn, end));
             }
+
             if (!list.empty()) {
-                stack.push(std::make_pair(list.begin(), list.end()));
+                stk.push(std::make_pair(list.begin(), list.end()));
             }
         }
 
@@ -70,9 +75,10 @@ public:
 
 private:
     std::stack<
-        std::pair<std::vector<NestedInteger>::iterator,
-                  std::vector<NestedInteger>::iterator>> stack;
-    int num;
+        std::pair<
+            std::vector<NestedInteger>::iterator,
+            std::vector<NestedInteger>::iterator>> stk;
+    int cache;
 };
 
 /**

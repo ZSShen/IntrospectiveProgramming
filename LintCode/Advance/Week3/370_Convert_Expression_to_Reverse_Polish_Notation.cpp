@@ -1,5 +1,9 @@
 class Solution {
 public:
+    Solution()
+      : map({{"*", 2}, {"/", 2}, {"+", 1}, {"-", 1}, {"(", 0}})
+    { }
+
     /**
      * @param expression: A string array
      * @return: The Reverse Polish notation of this expression
@@ -31,14 +35,6 @@ public:
          *                          ABC/DE+*+F-
          */
 
-        std::unordered_map<std::string, int> map;
-        map["*"] = 2;
-        map["/"] = 2;
-        map["+"] = 1;
-        map["-"] = 1;
-        map["("] = 0;
-        map[")"] = 0;
-
         std::vector<std::string> rpn;
         std::stack<std::string> stack;
 
@@ -59,10 +55,10 @@ public:
 
             } else {
 
-                // Pop the operators that have the higher priority first, and
-                // then push this new operator.
-                int priority = map[token];
-                while (!stack.empty() && priority <= map[stack.top()]) {
+                // Pop the operators that have the higher or the same
+                // precedences first, and then push this operator onto the stack.
+                int precedence = map[token];
+                while (!stack.empty() && precedence <= map[stack.top()]) {
                     rpn.push_back(stack.top());
                     stack.pop();
                 }
@@ -78,4 +74,7 @@ public:
 
         return rpn;
     }
+
+private:
+    std::unordered_map<std::string, int> map;
 };

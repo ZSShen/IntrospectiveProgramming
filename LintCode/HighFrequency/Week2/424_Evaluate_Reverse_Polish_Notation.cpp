@@ -19,7 +19,7 @@ public:
             } else if (token == "/") {
                 evaluate(stack, '/');
             } else {
-                stack.push(atoi(token.c_str()));
+                stack.push(std::stoi(token));
             }
         }
 

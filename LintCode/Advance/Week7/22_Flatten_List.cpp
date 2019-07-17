@@ -71,33 +71,44 @@ class Solution {
 public:
     // @param nestedList a list of NestedInteger
     // @return a list of integer
-    vector<int> flatten(vector<NestedInteger> &list) {
+    vector<int> flatten(vector<NestedInteger> &nestedList) {
         // Write your code here
 
         std::vector<int> ans;
 
-        std::stack<std::pair<
-            std::vector<NestedInteger>::iterator,
-            std::vector<NestedInteger>::iterator>> stack;
+        std::stack<
+            std::pair<
+                std::vector<NestedInteger>::iterator,
+                std::vector<NestedInteger>::iterator>> stk;
 
-        stack.push(std::make_pair(list.begin(), list.end()));
+        if (!nestedList.empty()) {
+            stk.push(std::make_pair(nestedList.begin(), nestedList.end()));
+        }
 
-        while (!stack.empty()) {
-            auto pair = stack.top();
-            auto bgn = pair.first;
-            auto end = pair.second;
-            stack.pop();
+        while (!stk.empty()) {
+
+            auto top = stk.top();
+            stk.pop();
+
+            auto& bgn = top.first;
+            auto& end = top.second;
 
             while (bgn != end) {
                 if (bgn->isInteger()) {
                     ans.push_back(bgn->getInteger());
                     ++bgn;
                 } else {
-                    auto& nest =
-                        const_cast<vector<NestedInteger>&>(bgn->getList());
+                    auto& list =
+                        const_cast<std::vector<NestedInteger>&>(bgn->getList());
+
                     ++bgn;
-                    stack.push(std::make_pair(bgn, end));
-                    stack.push(std::make_pair(nest.begin(), nest.end()));
+                    if (bgn != end) {
+                        stk.push(std::make_pair(bgn, end));
+                    }
+
+                    if (!list.empty()) {
+                        stk.push(std::make_pair(list.begin(), list.end()));
+                    }
                     break;
                 }
             }
