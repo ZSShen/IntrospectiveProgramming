@@ -69,7 +69,7 @@ public:
                 int len = word.length();
                 int j = i + len;
 
-                if (j > n || dp[j]) {
+                if (len == 0 || j > n || dp[j]) {
                     continue;
                 }
 

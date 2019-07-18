@@ -1,3 +1,15 @@
+
+
+struct Record {
+    std::string word;
+    int level;
+
+    Record(const auto& word, int level)
+      : word(word), level(level)
+    { }
+};
+
+
 class Solution {
 public:
     /*
@@ -9,43 +21,53 @@ public:
     int ladderLength(string &start, string &end, unordered_set<string> &dict) {
         // write your code here
 
-        if (start == end) {
-            return 1;
-        }
+        /**
+         *              dot -- dog
+         *            /            \
+         *  hit -- hot              cog
+         *            \            /
+         *              lot -- log
+         */
 
         dict.insert(end);
 
-        std::queue<std::pair<std::string, int>> queue;
-        queue.push(std::make_pair(start, 1));
+        std::queue<Record> queue;
+        queue.push(Record(start, 1));
 
         while (!queue.empty()) {
-            auto pair = queue.front();
-            queue.pop();
 
-            auto& src = pair.first;
-            auto& step = pair.second;
+            int n = queue.size();
+            for (int i = 0 ; i < n ; ++i) {
 
-            int size = src.length();
-            for (int l = 0 ; l < size ; ++l) {
+                auto front = queue.front();
+                queue.pop();
+                auto& word = front.word;
+                int level = front.level;
 
-                std::string dst(src);
-                for (char ch = 'a' ; ch <= 'z' ; ++ch) {
-                    dst[l] = ch;
+                if (word == end) {
+                    return level;
+                }
 
-                    if (dict.count(dst) == 0) {
-                        continue;
+                int len = word.length();
+                for (int j = 0 ; j < len ; ++j) {
+
+                    char backup = word[j];
+                    for (char ch = 'a' ; ch <= 'z' ; ++ch) {
+                        word[j] = ch;
+
+                        if(dict.count(word) == 0) {
+                            continue;
+                        }
+
+                        queue.push(Record(word, level + 1));
+                        dict.erase(word);
                     }
 
-                    if (dst == end) {
-                        return step + 1;
-                    }
-
-                    queue.push(std::make_pair(dst, step + 1));
-                    dict.erase(dst);
+                    word[j] = backup;
                 }
             }
         }
 
-        return -1;
+        return 0;
     }
 };
