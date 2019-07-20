@@ -8,21 +8,15 @@ public:
     bool wordPatternMatch(string &pattern, string &str) {
         // write your code here
 
-        int bnd_p = pattern.length();
-        if (bnd_p == 0) {
-            return false;
-        }
-        int bnd_s = str.length();
-        
-        unordered_map<char, std::string> map;
-        unordered_set<std::string> set;
+        std::unordered_map<char, std::string> map;
+        std::unordered_set<std::string> dedup;
 
-        return runBacktracking(0, bnd_p, pattern, 0, bnd_s, str, map, set);
+        return runBackTracking(
+            0, pattern.length(), pattern, 0, str.length(), str, map, dedup);
     }
-    
 
 private:
-    bool runBacktracking(
+    bool runBackTracking(
             int idx_p,
             int bnd_p,
             const std::string& pat,
@@ -30,8 +24,8 @@ private:
             int bnd_s,
             const std::string& str,
             std::unordered_map<char, std::string>& map,
-            std::unordered_set<std::string> set) {
-        
+            std::unordered_set<std::string>& dedup) {
+
         if (idx_p == bnd_p && idx_s == bnd_s) {
             return true;
         }
@@ -44,44 +38,44 @@ private:
 
         if (map.count(ch) == 1) {
             const auto& token = map[ch];
-
             int len_t = token.length();
-            int space = bnd_s - idx_s;
-            if (space < len_t) {
-                return false;
-            }
-            
-            if (token != str.substr(idx_s, len_t)) {
+
+            if (len_t > bnd_s - idx_s) {
                 return false;
             }
 
-            bool found = runBacktracking(
-                idx_p + 1, bnd_p, pat, idx_s + len_t, bnd_s, str, map, set);
-            if (found) {
+            auto cand = str.substr(idx_s, len_t);
+            if (cand != token) {
+                return false;
+            }
+
+            auto ret = runBackTracking(
+                idx_p + 1, bnd_p, pat, idx_s + len_t, bnd_s, str, map, dedup);
+            if (ret) {
                 return true;
             }
-
         } else {
             for (int i = idx_s ; i < bnd_s ; ++i) {
-                auto token = str.substr(idx_s, i - idx_s + 1);
-                if (set.count(token) == 1) {
+                auto cand = str.substr(idx_s, i - idx_s + 1);
+
+                if (dedup.count(cand) == 1) {
                     continue;
                 }
 
-                map.emplace(ch, token);
-                set.emplace(token);
+                map[ch] = cand;
+                dedup.insert(cand);
 
-                bool found = runBacktracking(
-                    idx_p + 1, bnd_p, pat, i + 1, bnd_s, str, map, set);
-                if (found) {
+                auto ret = runBackTracking(
+                    idx_p + 1, bnd_p, pat, i + 1, bnd_s, str, map, dedup);
+                if (ret) {
                     return true;
                 }
 
                 map.erase(ch);
-                set.erase(token);
+                dedup.erase(cand);
             }
         }
-        
+
         return false;
     }
 };

@@ -8,57 +8,44 @@ public:
     int lengthOfLongestSubstringKDistinct(string &s, int k) {
         // write your code here
 
-        /**
-         *     l
-         *           r
-         *   e c e b a
-         *
-         *   k = 3
-         *   c = 3
-         *   window = 4
-         *
-         *   e: 1
-         *   c: 0
-         *   b: 1
-         *   a: 1
-         */
-
-        int len = s.length();
-        if (len == 0) {
+        int n = s.length();
+        if (n == 0) {
             return 0;
         }
 
         std::vector<int> bag(256, 0);
-
         int l = 0, r = 0;
-        int c = 0;
-        int opt_size = std::numeric_limits<int>::min();
+        int count = 0;
+        int ans = 0;
 
-        while (r < len) {
+        while (r < n) {
 
             char ch = s[r];
             ++bag[ch];
 
             if (bag[ch] == 1) {
-                ++c;
+                ++count;
             }
 
-            while (c > k) {
-                ch = s[l];
-                ++l;
+            if (count <= k) {
+                // Update the window size here.
+                ans = std::max(ans, r - l + 1);
+            } else {
+                while (count > k) {
+                    ch = s[l];
 
-                --bag[ch];
-                if (bag[ch] == 0) {
-                    --c;
+                    --bag[ch];
+                    if (bag[ch] == 0) {
+                        --count;
+                    }
+
+                    ++l;
                 }
-
             }
-
-            opt_size = std::max(opt_size, r - l + 1);
 
             ++r;
         }
 
-        return (opt_size != std::numeric_limits<int>::min()) ? opt_size : len;
+        return ans;
     }
 };

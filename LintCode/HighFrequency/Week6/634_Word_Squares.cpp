@@ -8,84 +8,95 @@ public:
         // write your code here
 
         /**
-         *  1. Check the prefix to select candidates.
+         *  1. To choose a proper candidate in the ith recursion step, we need
+         *     to check if there are words starting with the prefix formed by
+         *     the first (i - 1) words collected so far.
          *
-         *  b a l l
-         *  a r e a <= candidate
+         *   b a l l
+         *   a       => b a l l => the second word should start with "a".
+         *   l
+         *   l
          *
-         *  2. Prefict the prefixes to decide whethere we really should use that
-         *     candidate.
+         *  2. Once we select a legal candidate, we need to predict if we can
+         *     find the words starting with the prefix formed by the suffixes
+         *     of the i words collected so far in the future round.
          *
-         *      | |
-         *      $ $
-         *  b a l l
-         *  a r e a
+         *       * *
+         *   b a l l  => b a l l => there must be words starting with "le"
+         *   a r e a     a r e a    and "la".
+         *   l e
+         *   l a
          */
 
         if (words.empty()) {
             return {};
         }
 
-        int n = words[0].length();
+        int n = words[0].size();
 
-        std::unordered_map<std::string, std::vector<std::string>> map;
+        // Group the words sharing the same prefix.
+        std::unordered_map<std::string, std::unordered_set<std::string>> trie;
         for (const auto& word : words) {
-            map[""].push_back(word);
-            for (int i = 1 ; i <= n ; ++i) {
-                map[word.substr(0, i)].push_back(word);
+            trie[""].insert(word);
+
+            int len = word.length();
+            for (int i = 1 ; i <= len ; ++i) {
+                auto prefix = word.substr(0, i);
+                trie[prefix].insert(word);
             }
         }
 
-        std::vector<std::string> path;
+        std::vector<std::string> config;
         std::vector<std::vector<std::string>> ans;
 
-        runBacktracking(0, n, map, path, ans);
+        runBackTracking(0, n, trie, config, ans);
         return ans;
     }
 
 private:
-    void runBacktracking(
-            int level, int bound,
-            std::unordered_map<std::string, std::vector<std::string>>& map,
-            std::vector<std::string>& path,
-            std::vector<std::vector<std::string>>& ans) {
+    void runBackTracking(
+        int index,
+        int bound,
+        std::unordered_map<std::string, std::unordered_set<std::string>>& trie,
+        std::vector<std::string>& config,
+        std::vector<std::vector<std::string>>& ans) {
 
-        if (level == bound) {
-            ans.push_back(path);
+        if (index == bound) {
+            ans.push_back(config);
             return;
         }
 
+        // Adopt the 1st filtering criterion.
         std::string key;
-        for (const auto& cand : path) {
-            key += cand[level];
+        for (const auto& word : config) {
+            key += word[index];
         }
 
-        // Apply the first filtering criterion.
-        for (const auto& member : map[key]) {
+        for (const auto& cand : trie[key]) {
+            config.push_back(cand);
 
-            path.push_back(member);
-
-            // Apply the second filtering criterion.
-            if (isUsable(level + 1, bound, path, map)) {
-                runBacktracking(level + 1, bound, map, path, ans);
+            // Adopt the 2nd filtering criterion.
+            if (canUse(index + 1, bound, trie, config)) {
+                runBackTracking(index + 1, bound, trie, config, ans);
             }
 
-            path.pop_back();
+            config.pop_back();
         }
     }
 
-    bool isUsable(
-            int level, int bound,
-            std::vector<std::string>& path,
-            std::unordered_map<std::string, std::vector<std::string>>& map) {
+    bool canUse(
+        int index,
+        int bound,
+        std::unordered_map<std::string, std::unordered_set<std::string>>& trie,
+        std::vector<std::string>& config) {
 
-        for (int i = level ; i < bound ; ++i) {
+        for (int i = index ; i < bound ; ++i) {
             std::string key;
-            for (const auto& cand : path) {
-                key += cand[i];
+            for (const auto& word : config) {
+                key += word[i];
             }
 
-            if (map.count(key) == 0) {
+            if (trie.count(key) == 0) {
                 return false;
             }
         }
