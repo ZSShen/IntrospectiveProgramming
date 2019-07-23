@@ -40,7 +40,7 @@ public:
     }
 };
 
-// The solution based on priority queue
+
 class Solution {
 public:
     /**
@@ -51,26 +51,19 @@ public:
     int nthSuperUglyNumber(int n, vector<int> &primes) {
         // write your code here
 
-        std::priority_queue<
-            long long, std::vector<long long>, std::greater<long long>> queue;
-        std::unordered_set<long long> set;
+        std::set<long, std::less<long>> queue;
+        queue.insert(1);
 
-        queue.push(1);
-        long long nth;
-        for (int i = 1 ; i <= n ; ++i) {
-            nth = queue.top();
-            queue.pop();
+        long nth = 0;
+        for (int i = 0 ; i < n ; ++i) {
+            nth = *queue.begin();
+            queue.erase(nth);
 
             for (int prime : primes) {
-                long long num = nth * prime;
-                if (set.count(num) == 1) {
-                    continue;
-                }
-                set.insert(num);
-                queue.push(num);
+                queue.insert(nth * prime);
             }
         }
 
-        return static_cast<int>(nth);
+        return nth;
     }
 };

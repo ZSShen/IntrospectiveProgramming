@@ -1,21 +1,18 @@
 
-
 struct Record {
     int sum;
-    int a_idx;
-    int b_idx;
+    int idx_a;
+    int idx_b;
 
-    Record(int sum, int a_idx, int b_idx)
-      : sum(sum),
-        a_idx(a_idx),
-        b_idx(b_idx)
+    Record(int sum, int idx_a, int idx_b)
+      : sum(sum), idx_a(idx_a), idx_b(idx_b)
     { }
 };
 
 
 struct RecordCompare {
 
-    bool operator() (const Record& lhs, const Record& rhs) {
+    bool operator() (const auto& lhs, const auto& rhs) {
         return lhs.sum > rhs.sum;
     }
 };
@@ -55,36 +52,27 @@ public:
             visit(size_a, std::vector<bool>(size_b, false));
         visit[0][0] = true;
 
-        int kth;
-        for (int i = 0 ; i < k ; ++i) {
-            auto top = queue.top();
+        for (int i = 0 ; i < k - 1 ; ++i) {
+            auto rec = queue.top();
             queue.pop();
 
-            kth = top.sum;
-            int a_idx = top.a_idx;
-            int b_idx = top.b_idx;
+            int idx_a = rec.idx_a;
+            int idx_b = rec.idx_b;
+            int idx_na = idx_a + 1;
+            int idx_nb = idx_b + 1;
 
-            if (b_idx + 1 < size_b) {
-                int new_b_idx = b_idx + 1;
-
-                if (!visit[a_idx][new_b_idx]) {
-                    queue.push(
-                        Record(A[a_idx] + B[new_b_idx], a_idx, new_b_idx));
-                    visit[a_idx][new_b_idx] = true;
-                }
+            if (idx_na < size_a && !visit[idx_na][idx_b]) {
+                queue.push(Record(A[idx_na] + B[idx_b], idx_na, idx_b));
+                visit[idx_na][idx_b] = true;
             }
 
-            if (a_idx + 1 < size_a) {
-                int new_a_idx = a_idx + 1;
-
-                if (!visit[new_a_idx][b_idx]) {
-                    queue.push(
-                        Record(A[new_a_idx] + B[b_idx], new_a_idx, b_idx));
-                    visit[new_a_idx][b_idx] = true;
-                }
+            if (idx_nb < size_b && !visit[idx_a][idx_nb]) {
+                queue.push(Record(A[idx_a] + B[idx_nb], idx_a, idx_nb));
+                visit[idx_a][idx_nb] = true;
             }
         }
 
-        return kth;
+        auto rec = queue.top();
+        return rec.sum;
     }
 };

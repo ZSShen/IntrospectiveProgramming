@@ -20,29 +20,58 @@ public:
     TreeNode * maxTree(vector<int> &A) {
         // write your code here
 
-        int n = A.size();
-        if (n == 0) {
-            return nullptr;
-        }
+        /**
+         *  1. If the value stored in the new node is greater than the value
+         *     storeed in the previous node (the node on top of the stack),
+         *     we need to pop all the nodes from the stack until that we meet
+         *     a node contains the greater value or the stack is empty.
+         *     Moreover, we need to assign the last poped node as the left
+         *     child of this new node.
+         *
+         *  2. If the value stored in the new node is less than the value
+         *     stored in the previous node (the node on top of the stack),
+         *     we need to assign this new node as the right child of the
+         *     previous node.
+         *
+         *      2, 5, 6, 0, 3, 1
+         *
+         *  Stack: 2,
+         *         2, 5
+         *         5
+         *         5, 6
+         *         6
+         *         6, 0
+         *         6, 0, 3
+         *         6, 3
+         *         6, 3, 1
+         *
+         *  Tree:
+         *
+         *      2 =>  5  =>  6  =>  6    =>  6   =>   6
+         *           /      /      / \      / \      / \
+         *          2      5      5   0    5   3    5   3
+         *                /      /        /   /    /   / \
+         *               2      2        2   0    2   0   1
+         */
 
-        std::vector<TreeNode*> stack;
+        std::vector<TreeNode*> stk;
 
-        for (int i = 0 ; i < n ; ++i) {
+        for (int num : A) {
 
-            auto node = new TreeNode(A[i]);
+            auto curr = new TreeNode(num);
 
-            while (!stack.empty() && A[i] > stack.back()->val) {
-                node->left = stack.back();
-                stack.pop_back();
+            while (!stk.empty() && num > stk.back()->val) {
+                curr->left = stk.back();
+                stk.pop_back();
             }
 
-            if (!stack.empty()) {
-                stack.back()->right = node;
+            if (!stk.empty()) {
+                stk.back()->right = curr;
             }
 
-            stack.push_back(node);
+            stk.push_back(curr);
         }
 
-        return stack[0];
+        return (!stk.empty()) ? stk[0] : nullptr;
     }
 };
