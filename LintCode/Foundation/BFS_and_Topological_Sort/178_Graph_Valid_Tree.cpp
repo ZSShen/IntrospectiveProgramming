@@ -47,10 +47,10 @@ public:
 };
 
 
-class UnionFind {
+class DisjointSet {
 
 public:
-    UnionFind(int n)
+    DisjointSet(int n)
       : parents(std::vector<int>(n)) {
 
         for (int i = 0 ; i < n ; ++i) {
@@ -98,13 +98,14 @@ public:
         // write your code here
 
         /**
-         *                        -------
-         *                        |     |
-         *   0--1--3    (0, 3)    0--1--3
-         *      |       =====>       |
-         *      |                    |
-         *      2                    2
+         * We can use the data structure, disjoint set and union find, to check
+         * if a graph is a valid tree. If the graph is a valid tree, it should
+         * fulfill the following 2 requirements.
          *
+         *  1. Suppose the number of nodes is n, then the number of edges
+         *     should be n - 1.
+         *
+         *  2. The graph has only one connected component.
          */
 
         if (n == 0) {
@@ -114,7 +115,7 @@ public:
             return false;
         }
 
-        UnionFind sets(n);
+        DisjointSet sets(n);
 
         for (const auto& edge : edges) {
             int x = edge[0];

@@ -1,5 +1,21 @@
+
+
+struct Record {
+    int r;
+    int c;
+
+    Record(int r, int c)
+      : r(r), c(c)
+    { }
+};
+
+
 class Solution {
 public:
+    Solution()
+      : directs({{1, 0}, {-1, 0}, {0, 1}, {0, -1}})
+    { }
+
     /**
      * @param grid: a boolean 2D matrix
      * @return: an integer
@@ -17,18 +33,14 @@ public:
             return 0;
         }
 
-        std::vector<std::vector<int>> direct;
-        direct.push_back({1, 0});
-        direct.push_back({0, 1});
-        direct.push_back({-1, 0});
-        direct.push_back({0, -1});
-
         int count = 0;
-        for (int i = 0 ; i < num_r ; ++i) {
-            for (int j = 0 ; j < num_c ; ++j) {
-                if (grid[i][j]) {
+
+        for (int r = 0 ; r < num_r ; ++r) {
+            for (int c = 0 ; c < num_c ; ++c) {
+                if (grid[r][c]) {
+                    grid[r][c] = false;
+                    floodAndFill(grid, r, c, num_r, num_c);
                     ++count;
-                    runBFS(i, j, num_r, num_c, grid, direct);
                 }
             }
         }
@@ -37,38 +49,29 @@ public:
     }
 
 private:
-    void runBFS(
-            int r,
-            int c,
-            int num_r,
-            int num_c,
-            std::vector<std::vector<bool>>& grid,
-            const std::vector<std::vector<int>>& direct) {
+    void floodAndFill(auto& grid, int r, int c, int num_r, int num_c) {
 
-        std::queue<std::pair<int, int>> queue;
-        queue.push(std::make_pair(r, c));
-        grid[r][c] = false;
+        std::queue<Record> queue;
+        queue.push(Record(r, c));
 
         while (!queue.empty()) {
-            auto pair = queue.front();
+            auto rec = queue.front();
             queue.pop();
 
-            r = pair.first;
-            c = pair.second;
+            for (const auto& direct : directs) {
+                int nr = rec.r + direct[0];
+                int nc = rec.c + direct[1];
 
-            for (int i = 0 ; i < 4 ; ++i) {
-                int new_r = r + direct[i][0];
-                int new_c = c + direct[i][1];
-
-                if (new_r < 0 || new_r == num_r ||
-                    new_c < 0 || new_c == num_c) {
+                if (!(nr >= 0 && nc >= 0 && nr < num_r && nc < num_c) ||
+                    !grid[nr][nc]) {
                     continue;
                 }
-                if (grid[new_r][new_c]) {
-                    queue.push(std::make_pair(new_r, new_c));
-                    grid[new_r][new_c] = false;
-                }
+
+                queue.push(Record(nr, nc));
+                grid[nr][nc] = false;
             }
         }
     }
+
+    std::vector<std::vector<int>> directs;
 };

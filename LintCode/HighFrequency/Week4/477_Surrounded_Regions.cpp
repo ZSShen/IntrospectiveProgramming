@@ -1,11 +1,11 @@
 
+
 struct Record {
     int x;
     int y;
 
     Record(int x, int y)
-      : x(x),
-        y(y)
+      : x(x), y(y)
     { }
 };
 
@@ -13,12 +13,7 @@ struct Record {
 class Solution {
 public:
     Solution()
-      : directs({
-        {1, 0},
-        {-1, 0},
-        {0, 1},
-        {0, -1}
-      })
+      : directs({{1, 0}, {-1, 0}, {0, 1}, {0, -1}})
     { }
 
     /*
@@ -27,6 +22,18 @@ public:
      */
     void surroundedRegions(vector<vector<char>> &board) {
         // write your code here
+
+        /**
+         *  X X X X      X X X X      X X X X
+         *  X O O X  =>  X O O X  =>  X X X X
+         *  X X O X      X X O X      X X X X
+         *  X O X X      X B X X      X O X X
+         *
+         *  X X X X      X X X X      X X X X
+         *  X O O X  =>  X B B X  =>  X O O X
+         *  X O O X      X B B X      X O O X
+         *  X O X X      X B X X      X O X X
+         */
 
         int num_r = board.size();
         if (num_r == 0) {
@@ -41,93 +48,68 @@ public:
         std::vector<std::vector<bool>>
             visit(num_r, std::vector<bool>(num_c, false));
 
-        for (int i = 0 ; i < num_c ; ++i) {
-            int x = 0;
-            int y = i;
-
-            visit[x][y] = true;
-            if (board[x][y] == 'O') {
-                floodAndFill(x, y, num_r, num_c, visit, board);
+        for (int i = 0 ; i < num_r ; ++i) {
+            if (board[i][0] == 'O') {
+                floodAndFill(board, visit, i, 0, num_r, num_c);
             }
-
-            x = num_r - 1;
-            visit[x][y] = true;
-            if (board[x][y] == 'O') {
-                floodAndFill(x, y, num_r, num_c, visit, board);
+            if (board[i][num_c - 1] == 'O') {
+                floodAndFill(board, visit, i, num_c - 1, num_r, num_c);
             }
         }
 
-        for (int i = 1 ; i < num_r - 1 ; ++i) {
-            int x = i;
-            int y = 0;
-
-            visit[x][y] = true;
-            if (board[x][y] == 'O') {
-                floodAndFill(x, y, num_r, num_c, visit, board);
-
+        for (int i = 1 ; i < num_c - 1 ; ++i) {
+            if (board[0][i] == 'O') {
+                floodAndFill(board, visit, 0, i, num_r, num_c);
             }
-
-            y = num_c - 1;
-            visit[x][y] = true;
-            if (board[x][y] == 'O') {
-                floodAndFill(x, y, num_r, num_c, visit, board);
+            if (board[num_r - 1][i] == 'O') {
+                floodAndFill(board, visit, num_r - 1, i, num_r, num_c);
             }
         }
 
         for (int i = 0 ; i < num_r ; ++i) {
             for (int j = 0 ; j < num_c ; ++j) {
-                if (board[i][j] == 'O') {
-                    board[i][j] = 'X';
-                }
                 if (board[i][j] == 'B') {
                     board[i][j] = 'O';
+                } else if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
                 }
             }
         }
     }
 
-
 private:
     void floodAndFill(
-            int x, int y,
-            int num_r, int num_c,
-            std::vector<std::vector<bool>>& visit,
-            std::vector<std::vector<char>>& board) {
+            auto& board, auto& visit, int r, int c, int num_r, int num_c) {
 
-        board[x][y] = 'B';
+        board[r][c] = 'B';
+        visit[r][c] = true;
 
         std::queue<Record> queue;
-        queue.push(Record(x, y));
+        queue.push(Record(r, c));
 
         while (!queue.empty()) {
-
-            auto front = queue.front();
+            auto rec = queue.front();
             queue.pop();
-            x = front.x;
-            y = front.y;
+            int x = rec.x;
+            int y = rec.y;
 
             for (const auto& direct : directs) {
                 int nx = x + direct[0];
                 int ny = y + direct[1];
 
-                if (!(nx >= 0 && nx < num_r && ny >= 0 && ny < num_c)) {
-                    continue;
-                }
-                if (visit[nx][ny]) {
-                    continue;
-                }
-
-                visit[nx][ny] = true;
-
-                if (board[nx][ny] != 'O') {
+                if (!(nx >=0 && ny >=0 && nx < num_r && ny < num_c) ||
+                    board[nx][ny] != 'O' ||
+                    visit[nx][ny]) {
                     continue;
                 }
 
                 board[nx][ny] = 'B';
+                visit[nx][ny] = true;
                 queue.push(Record(nx, ny));
             }
         }
     }
+
 
     std::vector<std::vector<int>> directs;
 };
