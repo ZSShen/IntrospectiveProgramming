@@ -8,35 +8,35 @@ public:
     bool canFinish(int numCourses, vector<pair<int, int>>& prerequisites) {
         // write your code here
 
-        std::vector<std::vector<int>> graph(numCourses, std::vector<int>());
-        std::vector<int> indegs(numCourses, 0);
+        std::unordered_map<int, std::vector<int>> graph;
+        std::unordered_map<int, int> indegree;
 
-        for (const auto& req : prerequisites) {
-            int src = req.first;
-            int dst = req.second;
+        for (const auto& pair : prerequisites) {
+            int src = pair.first;
+            int dst = pair.second;
 
             graph[src].push_back(dst);
-            ++indegs[dst];
+            ++indegree[dst];
         }
 
         std::queue<int> queue;
         for (int i = 0 ; i < numCourses ; ++i) {
-            if (indegs[i] == 0) {
+            if (indegree.count(i) == 0) {
                 queue.push(i);
             }
         }
 
         std::vector<int> order;
         while (!queue.empty()) {
-            auto curr = queue.front();
+            int src = queue.front();
             queue.pop();
 
-            order.push_back(curr);
+            order.push_back(src);
 
-            for (auto neighbor : graph[curr]) {
-                --indegs[neighbor];
-                if (indegs[neighbor] == 0) {
-                    queue.push(neighbor);
+            for (int dst : graph[src]) {
+                --indegree[dst];
+                if (indegree[dst] == 0) {
+                    queue.push(dst);
                 }
             }
         }

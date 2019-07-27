@@ -1,14 +1,9 @@
 
-
 struct Record {
-    int x;
-    int y;
-    int dist;
+    int r, c;
 
-    Record(int x, int y, int dist)
-      : x(x),
-        y(y),
-        dist(dist)
+    Record(int r, int c)
+      : r(r), c(c)
     { }
 };
 
@@ -16,13 +11,7 @@ struct Record {
 class Solution {
 public:
     Solution()
-      : directs({
-        {1, 0},
-        {-1, 0},
-        {0, 1},
-        {0, -1}
-      }),
-        INF(std::numeric_limits<int>::max())
+      : directs({{1, 0}, {-1, 0}, {0, 1}, {0, -1}})
     { }
 
     /**
@@ -42,50 +31,57 @@ public:
             return;
         }
 
-        std::queue<Record> queue;
         std::vector<std::vector<bool>>
             visit(num_r, std::vector<bool>(num_c, false));
+        std::queue<Record> queue;
 
-        for (int x = 0 ; x < num_r ; ++x) {
-            for (int y = 0 ; y < num_c ; ++y) {
-                if (rooms[x][y] == 0) {
-                    queue.push(Record(x, y, 0));
-                    visit[x][y] = true;
+        for (int r = 0 ; r < num_r ; ++r) {
+            for (int c = 0 ; c < num_c ; ++c) {
+                if (rooms[r][c] != 0) {
+                    continue;
                 }
+                visit[r][c] = true;
+                queue.push(Record(r, c));
             }
         }
 
-        while (!queue.empty()) {
-            int size = queue.size();
+        int level = 0;
 
-            for (int i = 0 ; i < size ; ++i) {
-                auto front = queue.front();
+        while (!queue.empty()) {
+            ++level;
+            int n = queue.size();
+
+            for (int i = 0 ; i < n ; ++i) {
+                auto rec = queue.front();
                 queue.pop();
 
-                int x = front.x;
-                int y = front.y;
-                int dist = front.dist;
+                int r = rec.r;
+                int c = rec.c;
 
                 for (const auto& direct : directs) {
-                    int nx = x + direct[0];
-                    int ny = y + direct[1];
+                    int nr = r + direct[0];
+                    int nc = c + direct[1];
 
-                    if (!(nx >= 0 && nx < num_r && ny >= 0 && ny < num_c) ||
-                        visit[nx][ny] ||
-                        (rooms[nx][ny] == -1 || rooms[nx][ny] == 0)) {
+                    if (!(nr >= 0 && nc >= 0 && nr < num_r && nc < num_c) ||
+                        visit[nr][nc] ||
+                        rooms[nr][nc] == -1 ||
+                        rooms[nr][nc] == 0) {
                         continue;
                     }
 
-                    visit[nx][ny] = true;
-                    rooms[nx][ny] = dist + 1;
-                    queue.push(Record(nx, ny, dist + 1));
+                    if (rooms[nr][nc] == INT_MAX) {
+                        rooms[nr][nc] = level;
+                    } else {
+                        rooms[nr][nc] = std::min(rooms[nr][nc], level);
+                    }
+
+                    visit[nr][nc] = true;
+                    queue.push(Record(nr, nc));
                 }
             }
         }
     }
 
-
 private:
     std::vector<std::vector<int>> directs;
-    const int INF;
 };

@@ -74,11 +74,11 @@ public:
             return {-1, -1};
         }
 
-        // Find the lower bound.
+        // Find the starting position.
         int l = 0, r = n - 1;
         while (l + 1 < r) {
-            int m = (l + r) / 2;
-            if (A[m] >= target) {
+            int m = l + (r - l) / 2;
+            if (target <= A[m]) {
                 r = m;
             } else {
                 l = m;
@@ -96,23 +96,18 @@ public:
             return {-1, -1};
         }
 
-        // Find the upper bound.
+        // Find the ending position.
         l = 0, r = n - 1;
         while (l + 1 < r) {
-            int m = (l + r) / 2;
-            if (A[m] > target) {
-                r = m;
-            } else {
+            int m = l + (r - l) / 2;
+            if (target >= A[m]) {
                 l = m;
+            } else {
+                r = m;
             }
         }
 
-        int end = -1;
-        if (A[r] == target) {
-            end = r;
-        } else if (A[l] == target) {
-            end = l;
-        }
+        int end = (A[r] == target) ? r : l;
 
         return {bgn, end};
     }

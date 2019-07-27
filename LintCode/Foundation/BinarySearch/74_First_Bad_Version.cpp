@@ -25,9 +25,6 @@ public:
             }
         }
 
-        if (SVNRepo::isBadVersion(l)) {
-            return l;
-        }
-        return r;
+        return SVNRepo::isBadVersion(l) ? l : r;
     }
 };

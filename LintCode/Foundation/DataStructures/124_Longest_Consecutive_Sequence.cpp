@@ -6,12 +6,6 @@ public:
      */
     int longestConsecutive(vector<int> &nums) {
         // write your code here
-        /*
-        std::sort(nums.begin(), nums.end());
-        for (int num : nums) {
-            cout << num << ' ';
-        }
-        */
 
         std::unordered_set<int> set;
         for (int num : nums) {
@@ -21,27 +15,25 @@ public:
         int max = 0;
         while (!set.empty()) {
 
-            int num = *set.begin();
-            set.erase(num);
             int len = 1;
+            int seed = *set.begin();
+            set.erase(seed);
 
-            int cand = num + 1;
-            while (set.count(cand) == 1) {
-                set.erase(cand);
+            int forward = seed + 1;
+            while (set.count(forward) == 1) {
+                set.erase(forward);
                 ++len;
-                ++cand;
+                ++forward;
             }
 
-            cand = num - 1;
-            while (set.count(cand) == 1) {
-                set.erase(cand);
+            int backward = seed - 1;
+            while (set.count(backward) == 1) {
+                set.erase(backward);
                 ++len;
-                --cand;
+                --backward;
             }
 
-            if (len > max) {
-                max = len;
-            }
+            max = std::max(max, len);
         }
 
         return max;

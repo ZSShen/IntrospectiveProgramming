@@ -21,27 +21,23 @@ public:
     vector<vector<int>> findLeaves(TreeNode * root) {
         // write your code here
 
-        /**       (3)
-         *         1
+        /**
+         *         1(3)
          *        / \
          *    (2)2   3(1)
          *      / \
          *  (1)4   5(1)
          *
-         *  (1) 4 5 3
-         *  (2) 2
-         *  (3) 1
+         *   1: 4, 5, 3
+         *   2: 2
+         *   3: 1
          */
 
-        if (!root) {
-            return {};
-        }
-
         std::unordered_map<int, std::vector<int>> map;
-        int height = findHeights(root, map);
+        int h = runPostOrder(root, map);
 
         std::vector<std::vector<int>> ans;
-        for (int i = 1 ; i <= height ; ++i) {
+        for (int i = 1 ; i <= h ; ++i) {
             ans.emplace_back(std::move(map[i]));
         }
 
@@ -49,20 +45,18 @@ public:
     }
 
 private:
-    int findHeights(
-            TreeNode* root,
-            std::unordered_map<int, std::vector<int>>& map) {
+    int runPostOrder(TreeNode* root, auto& map) {
 
         if (!root) {
             return 0;
         }
 
-        int l = findHeights(root->left, map);
-        int r = findHeights(root->right, map);
+        int l = runPostOrder(root->left, map);
+        int r = runPostOrder(root->right, map);
 
-        int height = std::max(l, r) + 1;
-        map[height].push_back(root->val);
+        int h = std::max(l, r) + 1;
+        map[h].push_back(root->val);
 
-        return height;
+        return h;
     }
 };

@@ -22,7 +22,6 @@ public:
 
         int sum = 0;
         runReverseInorder(root, sum);
-
         return root;
     }
 

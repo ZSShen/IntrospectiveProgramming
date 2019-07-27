@@ -8,27 +8,27 @@ public:
     int searchMatrix(vector<vector<int>> &matrix, int target) {
         // write your code here
 
-        int num_row = matrix.size();
-        if (num_row == 0) {
+        int num_r = matrix.size();
+        if (num_r == 0) {
             return 0;
         }
 
-        int num_col = matrix[0].size();
-        if (num_col == 0) {
+        int num_c = matrix[0].size();
+        if (num_c == 0) {
             return 0;
         }
 
         int count = 0;
-        int r = 0, c = num_col - 1;
-        while (r < num_row && c >= 0) {
-            if (matrix[r][c] == target) {
+        int x = 0, y = num_c - 1;
+        while (x < num_r && y >= 0) {
+            if (matrix[x][y] == target) {
                 ++count;
             }
 
-            if (target > matrix[r][c]) {
-                ++r;
+            if (target <= matrix[x][y]) {
+                --y;
             } else {
-                --c;
+                ++x;
             }
         }
 
