@@ -20,46 +20,66 @@ public:
     vector<vector<int>> zigzagLevelOrder(TreeNode * root) {
         // write your code here
 
-        std::vector<std::vector<int>> ans;
+        /**
+         * We can use 2 stacks to control the traversal.
+         *
+         * In a specific level, we consume all the nodes collected in the first
+         * stack and explore the children of those nodes.
+         *
+         * If the level number is even, e.g. 0 and 2, we explore the children
+         * from the very left side to the very right side and push them onto
+         * the second stack.
+         *
+         * If the level number is odd, e.g. 1 and 3, we explore the children
+         * from the very right side to the very left side and push them onto
+         * the second stack.
+         *
+         * Upon finishing consuming the nodes collected in the first stack,
+         * we override the first stack with the content of the second stack.
+         */
+
         if (!root) {
-            return ans;
+            return {};
         }
 
-        std::stack<TreeNode*> stack;
-        stack.push(root);
+        std::vector<std::vector<int>> ans;
+
+        std::stack<TreeNode*> first;
+        first.push(root);
+
         int level = 0;
 
-        while (!stack.empty()) {
-            int size = stack.size();
+        while (!first.empty()) {
+            int n = first.size();
+            std::stack<TreeNode*> second;
             std::vector<int> collect;
-            std::stack<TreeNode*> shadow;
 
-            for (int i = 0 ; i < size ; ++i) {
-                auto curr = stack.top();
-                stack.pop();
+            for (int i = 0 ; i < n ; ++i) {
+                auto node = first.top();
+                first.pop();
 
-                if (level >> 1 << 1 == level) {
-                    if (curr->left) {
-                        shadow.push(curr->left);
+                collect.push_back(node->val);
+
+                if (level % 2 == 0) {
+                    if (node->left) {
+                        second.push(node->left);
                     }
-                    if (curr->right) {
-                        shadow.push(curr->right);
+                    if (node->right) {
+                        second.push(node->right);
                     }
                 } else {
-                    if (curr->right) {
-                        shadow.push(curr->right);
+                    if (node->right) {
+                        second.push(node->right);
                     }
-                    if (curr->left) {
-                        shadow.push(curr->left);
+                    if (node->left) {
+                        second.push(node->left);
                     }
                 }
-
-                collect.push_back(curr->val);
             }
 
+            ans.emplace_back(std::move(collect));
+            first = std::move(second);
             ++level;
-            stack = std::move(shadow);
-            ans.push_back(std::move(collect));
         }
 
         return ans;

@@ -11,9 +11,10 @@ public:
         // Write your code here
 
         /**
-         *  knows(a, b)
-         *  -> true  -> a knows b -> a is not the celebrity.
-         *  -> false -> a does not know b -> b is not the celebrity.
+         * knows(a, b)
+         *
+         * 1. true  -> a knows b -> a is not the celebrity.
+         * 2. false -> a does not know b -> b is not the celebrity.
          */
 
         int a = 0, b = n - 1;
@@ -25,12 +26,12 @@ public:
             }
         }
 
-        for (int i = 0 ; i < n - 1 ; ++i) {
+        for (int i = 0 ; i < n ; ++i) {
             if (i == a) {
                 continue;
             }
 
-            if (knows(a, i) || !knows(i, a)) {
+            if (!knows(i, a) || knows(a, i)) {
                 return -1;
             }
         }

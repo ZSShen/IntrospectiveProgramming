@@ -128,18 +128,36 @@ public:
     int romanToInt(string &s) {
         // write your code here
 
-        int len = s.length();
-        int num = map[s[len - 1]];
+        /**
+         * Let's scan the string from the tail to the head.
+         *
+         * 1. If the value of a Roman character is greater than or etual to  the
+         *    value of its predecessor, the accumulative sum is the value of the
+         *    predecessor added by the value of the current character.
+         *
+         *    e.g.: VI = 1 + 5 = 6
+         *          VIII = 1 + 1 + 1 + 5 = 8
+         *
+         * 2. If the value of a Roman character is less than the value of its
+         *    predecessor, the accumulative sum is the value of the predecessor
+         *    subtracted by the value of the current character.
+         *
+         *    e.g.: IV = 5 - 1 = 4
+         */
 
-        for (int i = len - 2 ; i >= 0 ; --i) {
+        int n = s.length();
+
+        int sum = map[s[n - 1]];
+
+        for (int i = n - 2 ; i >= 0 ; --i) {
             if (map[s[i]] >= map[s[i + 1]]) {
-                num += map[s[i]];
+                sum += map[s[i]];
             } else {
-                num -= map[s[i]];
+                sum -= map[s[i]];
             }
         }
 
-        return num;
+        return sum;
     }
 
 private:

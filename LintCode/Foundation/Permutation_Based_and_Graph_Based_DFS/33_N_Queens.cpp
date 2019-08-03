@@ -12,56 +12,67 @@ public:
             return ans;
         }
 
-        std::vector<int> queens(n, 0);
-        runBacktracking(0, n, queens, ans);
+        std::vector<int> queens;
+        runBackTracking(0, n, queens, ans);
         return ans;
     }
 
+
 private:
-    void runBacktracking(
-            int c,
-            int n,
-            std::vector<int>& queens,
+    void runBackTracking(
+            int index, int dim,
+            std::vector<int> queens,
             std::vector<std::vector<std::string>>& ans) {
 
-        if (c == n) {
-            std::string init;
-            for (int i = 0 ; i < n ; ++i) {
-                init.push_back('.');
+        if (index == dim) {
+            std::string row;
+            for (int i = 0 ; i < dim ; ++i) {
+                row.push_back('.');
             }
 
-            std::vector<std::string> config(n, init);
+            std::vector<std::string> config(dim, row);
 
-            for (int i = 0 ; i < n ; ++i) {
-                config[queens[i]][i] = 'Q';
+            for (int c = 0 ; c < dim ; ++c) {
+                int r = queens[c];
+                config[r][c] = 'Q';
             }
 
-            ans.push_back(std::move(config));
+            ans.emplace_back(std::move(config));
             return;
         }
 
-        for (int r = 0 ; r < n ; ++r) {
+        for (int nr = 0 ; nr < dim ; ++nr) {
+            bool check = true;
 
-            bool legal = true;
-            for (int i = 0 ; i < c ; ++i) {
-                if (queens[i] == r) {
-                    legal = false;
+            for (int c = 0 ; c < index ; ++c) {
+                int r = queens[c];
+
+                // Check the row conflict.
+                if (nr == r) {
+                    check = false;
                     break;
                 }
-                if (queens[i] - i == r - c) {
-                    legal = false;
+
+                // Check the diagonal conflict.
+                if (r - c == nr - index) {
+                    check = false;
                     break;
                 }
-                if (queens[i] + i == r + c) {
-                    legal = false;
+
+                // Check the anti-diagonal conflict.
+                if (r + c == nr + index) {
+                    check = false;
                     break;
                 }
             }
 
-            if (legal) {
-                queens[c] = r;
-                runBacktracking(c + 1, n, queens, ans);
+            if (!check) {
+                continue;
             }
+
+            queens.push_back(nr);
+            runBackTracking(index + 1, dim, queens, ans);
+            queens.pop_back();
         }
     }
 };

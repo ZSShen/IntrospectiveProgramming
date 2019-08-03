@@ -1,18 +1,23 @@
 class Solution {
 public:
-    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+    /**
+     * @param strs: the given array of strings
+     * @return: The anagrams which have been divided into groups
+     */
+    vector<vector<string>> groupAnagrams(vector<string> &strs) {
+        // write your code here
 
         std::unordered_map<std::string, std::vector<std::string>> groups;
 
-        for (auto& str : strs) {
-            auto key(str);
+        for (const auto& word : strs) {
+            auto key(word);
             std::sort(key.begin(), key.end());
-            groups[key].push_back(str);
+            groups[key].push_back(word);
         }
 
         std::vector<std::vector<std::string>> ans;
         for (auto& pair : groups) {
-            ans.push_back(std::move(pair.second));
+            ans.emplace_back(std::move(pair.second));
         }
 
         return ans;

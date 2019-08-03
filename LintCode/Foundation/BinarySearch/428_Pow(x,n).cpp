@@ -8,6 +8,17 @@ public:
     double myPow(double x, int n) {
         // write your code here
 
+        /**
+         *   n^8 = n^4 x n^4
+         *       = (n^2 x n^2) x (n^2 x n^2)
+         *
+         *   n^9 = n^8 x n
+         *         ---
+         *
+         *  Corner Case: n maybe -2147483648
+         *               That's way we use long type to store the exponential.
+         */
+
         if (n == 0) {
             return 1;
         }

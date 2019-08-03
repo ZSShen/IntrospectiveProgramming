@@ -85,3 +85,112 @@ private:
         return false;
     }
 };
+
+
+class Solution {
+public:
+    /**
+     * @param board: the sudoku puzzle
+     * @return: nothing
+     */
+    void solveSudoku(vector<vector<int>> &board) {
+        // write your code here
+
+        std::vector<std::vector<int>> rows(9, std::vector<int>(10, false));
+        std::vector<std::vector<int>> cols(9, std::vector<int>(10, false));
+        std::vector<std::vector<int>> subs(9, std::vector<int>(10, false));
+
+        for (int i = 0 ; i < 9 ; ++i) {
+            for (int j = 0 ; j < 9 ; ++j) {
+                int num = board[i][j];
+                if (num == 0) {
+                    continue;
+                }
+
+                rows[i][num] = true;
+                cols[j][num] = true;
+                subs[getSubMatrixIndex(i, j)][num] = true;
+            }
+        }
+
+        runBackTracking(0, 0, board, rows, cols, subs);
+    }
+
+private:
+    bool runBackTracking(
+        int r, int c,
+        std::vector<std::vector<int>>& board,
+        std::vector<std::vector<int>>& rows,
+        std::vector<std::vector<int>>& cols,
+        std::vector<std::vector<int>>& subs) {
+
+        if (c == 9) {
+            c = 0;
+            ++r;
+        }
+
+        if (r == 9 && c == 0) {
+            return true;
+        }
+
+        int num = board[r][c];
+
+        if (num != 0) {
+            return runBackTracking(r, c + 1, board, rows, cols, subs);
+        }
+
+        int s = getSubMatrixIndex(r, c);
+
+        for (int i = 1 ; i <= 9 ; ++i) {
+            if (rows[r][i] || cols[c][i] || subs[s][i]) {
+                continue;
+            }
+
+            rows[r][i] = true;
+            cols[c][i] = true;
+            subs[s][i] = true;
+            board[r][c] = i;
+
+            bool res = runBackTracking(r, c + 1, board, rows, cols, subs);
+            if (res) {
+                return true;
+            }
+
+            rows[r][i] = false;
+            cols[c][i] = false;
+            subs[s][i] = false;
+            board[r][c] = 0;
+        }
+
+        return false;
+    }
+
+    int getSubMatrixIndex(int r, int c) {
+
+        if (r < 3) {
+            if (c < 3) {
+                return 0;
+            } else if (c < 6) {
+                return 1;
+            } else {
+                return 2;
+            }
+        } else if (r < 6) {
+            if (c < 3) {
+                return 3;
+            } else if (c < 6) {
+                return 4;
+            } else {
+                return 5;
+            }
+        } else {
+            if (c < 3) {
+                return 6;
+            } else if (c < 6) {
+                return 7;
+            } else {
+                return 8;
+            }
+        }
+    }
+};

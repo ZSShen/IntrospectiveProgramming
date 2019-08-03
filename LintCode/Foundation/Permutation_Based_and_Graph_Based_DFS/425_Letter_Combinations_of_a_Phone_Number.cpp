@@ -1,5 +1,18 @@
 class Solution {
 public:
+    Solution()
+      : map({
+          {'2', {'a', 'b', 'c'}},
+          {'3', {'d', 'e', 'f'}},
+          {'4', {'g', 'h', 'i'}},
+          {'5', {'j', 'k', 'l'}},
+          {'6', {'m', 'n', 'o'}},
+          {'7', {'p', 'q', 'r', 's'}},
+          {'8', {'t', 'u', 'v'}},
+          {'9', {'w', 'x', 'y', 'z'}},
+      })
+    { }
+
     /**
      * @param digits: A digital string
      * @return: all posible letter combinations
@@ -8,49 +21,34 @@ public:
         // write your code here
 
         std::vector<std::string> ans;
-        int len = digits.length();
-        if (len == 0) {
+        if (digits.empty()) {
             return ans;
         }
 
-        std::unordered_map<int, std::vector<char>> map;
-        map[2] = {'a', 'b', 'c'};
-        map[3] = {'d', 'e', 'f'};
-        map[4] = {'g', 'h', 'i'};
-        map[5] = {'j', 'k', 'l'};
-        map[6] = {'m', 'n', 'o'};
-        map[7] = {'p', 'q', 'r', 's'};
-        map[8] = {'t', 'u', 'v'};
-        map[9] = {'w', 'x', 'y', 'z'};
-
-        std::vector<std::vector<char>*> levels;
-
-        for (char ch : digits) {
-            int index = static_cast<int>(ch - '0');
-            levels.push_back(&map[index]);
-        }
-
-        std::string prefix;
-        runBacktracking(0, len, levels, prefix, ans);
+        std::string config;
+        runBackTracking(0, digits.length(), digits, config, ans);
+        return ans;
     }
 
 private:
-    void runBacktracking(
-            int curr,
-            int bound,
-            std::vector<std::vector<char>*>& levels,
-            std::string& prefix,
+    void runBackTracking(
+            int index, int bound,
+            const std::string& digits,
+            std::string& config,
             std::vector<std::string>& ans) {
 
-        if (curr == bound) {
-            ans.push_back(prefix);
+        if (index == bound) {
+            ans.push_back(config);
             return;
         }
 
-        for (auto ch : *levels[curr]) {
-            prefix.push_back(ch);
-            runBacktracking(curr + 1, bound, levels, prefix, ans);
-            prefix.pop_back();
+        char digit = digits[index];
+        for (char ch : map[digit]) {
+            config.push_back(ch);
+            runBackTracking(index + 1, bound, digits, config, ans);
+            config.pop_back();
         }
     }
+
+    std::unordered_map<char, std::vector<char>> map;
 };

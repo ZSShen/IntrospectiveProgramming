@@ -22,6 +22,16 @@ public:
     string serialize(TreeNode * root) {
         // write your code here
 
+        /**
+         *      3
+         *     / \
+         *    9   20
+         *       /  \
+         *      15   7
+         *
+         *   3, 9, #, #, 20, 15, #, #, 7, #, #
+         */
+
         if (!root) {
             return "#";
         }
