@@ -8,92 +8,88 @@ public:
         // write your code here
 
         /**
-         *  0.72
-         *  1.44  -> 1
+         * The strategy to handle the fractional part.
          *
-         *  0.44
-         *  0.88  -> 0
+         * e.g: 0.125 (demical)
          *
-         *  0.88
-         *  1.76  -> 1
+         *      0.25  -> 0
          *
-         *  0.76
-         *  1.52  -> 1
+         *      0.5   -> 0
          *
-         *  0.52
-         *  1.04  -> 4
+         *      1.0   -> 1
+         *      0.0   -> end
+         *
+         *      0.001 (binary)
          */
 
         auto pos = n.find('.');
         if (pos == std::string::npos) {
-            return convertInteger(n);
-        } else {
-            ++pos;
-            int len = n.length();
-
-            auto fraction = n.substr(pos, len - pos);
-            fraction = convertFraction(fraction);
-            if (fraction == "ERROR") {
-                return "ERROR";
-            }
-
-            auto integer = n.substr(0, pos - 1);
-            integer = convertInteger(integer);
-
-            return (fraction == "") ? integer : integer + "." + fraction;
+            return convertIntegralPart(n);
         }
+
+        auto int_part_dec = n.substr(0, pos);
+        auto fac_part_dec = n.substr(pos, n.length() - pos);
+        auto int_part_bin = convertIntegralPart(int_part_dec);
+        auto fac_part_bin = convertFractionalPart(fac_part_dec);
+
+        if (fac_part_bin == "ERROR") {
+            return "ERROR";
+        }
+        if (fac_part_bin.empty()) {
+            return int_part_bin;
+        }
+
+        return int_part_bin + "." + fac_part_bin;
     }
 
 private:
-    std::string convertFraction(const std::string& str) {
+    std::string convertIntegralPart(const std::string& str) {
 
-        auto num = std::stold("." + str);
-        if (num == 0) {
-            return "";
-        }
+        std::string res;
 
-        int round = 0;
-        int limit = 32;
-        std::string rep;
+        int n = std::stoi(str);
+        while (n > 0) {
+            div_t temp = std::div(n, 2);
+            n = temp.quot;
 
-        while (round < limit) {
-            num *= 2;
-            if (num >= 1.0) {
-                rep.push_back('1');
-                num -= 1;
-                if (num == 0.0) {
-                    break;
-                }
+            if (temp.rem == 0) {
+                res.push_back('0');
             } else {
-                rep.push_back('0');
+                res.push_back('1');
             }
-
-            ++round;
         }
 
-        return (round == limit) ? "ERROR" : rep;
+        if (res.empty()) {
+            res.push_back('0');
+        }
+
+        std::reverse(res.begin(), res.end());
+        return res;
     }
 
+    std::string convertFractionalPart(const std::string& str) {
 
-    std::string convertInteger(const std::string& str) {
+        int max_len = 32;
+        int len = 0;
+        std::string res;
 
-        auto num = std::stoll(str);
-        if (num == 0) {
-            return "0";
-        }
+        double n = std::stod(str);
+        while (n > 0) {
+            n *= 2;
 
-        std::string rep;
-        while (num > 0) {
-            int bit = num % 2;
-            num /= 2;
-            if (bit == 0) {
-                rep.push_back('0');
-            } else {
-                rep.push_back('1');
+            if (n < 1) {
+                res.push_back('0');
+            }  else {
+                res.push_back('1');
+                n -= 1;
+            }
+
+            ++len;
+            if (len > max_len) {
+                return "ERROR";
             }
         }
 
-        std::reverse(rep.begin(), rep.end());
-        return rep;
+        return res;
     }
 };

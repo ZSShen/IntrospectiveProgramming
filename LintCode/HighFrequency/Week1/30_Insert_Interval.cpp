@@ -16,48 +16,48 @@ public:
      * @param newInterval: new interval.
      * @return: A new interval list.
      */
-    vector<Interval> insert(vector<Interval> &intervals, Interval curr) {
+    vector<Interval> insert(vector<Interval> &intervals, Interval newInterval) {
         // write your code here
 
         int n = intervals.size();
         if (n == 0) {
-            return {curr};
+            return {newInterval};
         }
 
         int l = 0, r = n - 1;
         while (l + 1 < r) {
-            int m = (l + r) / 2;
-            if (curr.start >= intervals[m].start) {
-                ++l;
+            int m = l + (r - l) / 2;
+            if (newInterval.start <= intervals[m].start) {
+                r = m;
             } else {
-                --r;
+                l = m;
             }
         }
 
-        const auto& pred = intervals[l];
-        const auto& succ = intervals[r];
-
-        if (curr.start < pred.start) {
-            intervals.insert(intervals.begin(), curr);
-        } else if (curr.start > succ.start) {
-            intervals.push_back(curr);
+        auto iter = intervals.begin();
+        if (newInterval.start < intervals[l].start) {
+            intervals.insert(iter + l, newInterval);
+        } else if (intervals[r].start < newInterval.start) {
+            intervals.insert(iter + r + 1, newInterval);
         } else {
-            intervals.insert(intervals.begin() + r, curr);
+            intervals.insert(iter + r, newInterval);
         }
 
         std::vector<Interval> ans;
-
         Interval merge(intervals[0]);
+
         for (int i = 1 ; i <= n ; ++i) {
-            if (merge.end >= intervals[i].start) {
-                merge.end = std::max(merge.end, intervals[i].end);
+            const auto& curr = intervals[i];
+
+            if (curr.start <= merge.end) {
+                merge.end = std::max(merge.end, curr.end);
                 continue;
             }
 
-            ans.push_back(merge);
-            merge = intervals[i];
+            ans.emplace_back(std::move(merge));
+            merge = curr;
         }
-        ans.push_back(merge);
+        ans.emplace_back(std::move(merge));
 
         return ans;
     }

@@ -7,58 +7,53 @@ public:
     int atoi(string &str) {
         // write your code here
 
-        auto pos = str.find('.');
-        if (pos != std::string::npos) {
-            str = str.substr(0, pos);
+        int len = str.length();
+        int i = 0;
+
+        if (i == len) {
+            return 0;
         }
 
-        int i = 0;
-        int len = str.length();
-
+        // Ignore the whitespaces before the first non-whitespace character.
         while (i < len && str[i] == ' ') {
             ++i;
         }
 
-        bool is_positive = true;
+        if (i == len) {
+            return 0;
+        }
+
+        // Be careful about the case: +-2, which is illegal.
+        bool positive = true;
         if (str[i] == '+') {
             ++i;
         } else if (str[i] == '-') {
-            ++i;
-            is_positive = false;
-        }
-
-        long long value = 0;
-        int max = std::numeric_limits<int>::max();
-        int min = std::numeric_limits<int>::min();
-
-        while (i < len) {
-            if (str[i] == ' ') {
-                ++i;
-                continue;
-            }
-            if (!('0' <= str[i] && str[i] <= '9')) {
-                break;
-            }
-
-            value *= 10;
-            value += str[i] - '0';
-            if (value > max) {
-                break;
-            }
-
+            positive = false;
             ++i;
         }
 
-        if (!is_positive) {
-            value = -value;
+        // Process the integral part.
+        long sum = 0;
+        while (i < len && ('0' <= str[i] && str[i] <= '9')) {
+            sum *= 10;
+            sum += (str[i] - '0');
+            if (sum > INT_MAX) {
+                break;
+            }
+            ++i;
         }
 
-        if (value > max) {
-            return max;
-        } else if (value < min) {
-            return min;
-        } else {
-            return value;
+        if (!positive) {
+            sum = -sum;
         }
+
+        if (sum > INT_MAX) {
+            return INT_MAX;
+        }
+        if (sum < INT_MIN) {
+            return INT_MIN;
+        }
+
+        return sum;
     }
 };

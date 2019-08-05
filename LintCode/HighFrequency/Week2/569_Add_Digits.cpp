@@ -8,20 +8,19 @@ public:
         // write your code here
 
         while (num >= 10) {
-            num = convertNumber(num);
+            num = decompose(num);
         }
 
         return num;
     }
 
 private:
-    int convertNumber(int x) {
+    int decompose(int n) {
 
         int res = 0;
-
-        while (x > 0) {
-            res += x % 10;
-            x /= 10;
+        while (n > 0) {
+            res += n % 10;
+            n /= 10;
         }
 
         return res;

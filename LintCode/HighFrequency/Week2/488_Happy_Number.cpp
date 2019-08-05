@@ -8,10 +8,8 @@ public:
         // write your code here
 
         std::unordered_set<int> set;
-        set.insert(n);
-
         while (n != 1) {
-            n = convertNumber(n);
+            n = decompose(n);
             if (set.count(n) == 1) {
                 return false;
             }
@@ -22,14 +20,13 @@ public:
     }
 
 private:
-    int convertNumber(int num) {
+    int decompose(int n) {
 
         int res = 0;
-
-        while (num > 0) {
-            int digit = num % 10;
+        while (n > 0) {
+            int digit = n % 10;
+            n /= 10;
             res += digit * digit;
-            num /= 10;
         }
 
         return res;

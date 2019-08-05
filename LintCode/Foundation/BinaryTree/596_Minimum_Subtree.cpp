@@ -15,15 +15,13 @@
 struct Result {
     int sum;
     TreeNode* root;
-    
+
     Result()
-      : sum(0),
-        root(nullptr)
+      : sum(0), root(nullptr)
     { }
-    
+
     Result(int sum, TreeNode* root)
-      : sum(sum),
-        root(root)
+      : sum(sum), root(root)
     { }
 };
 
@@ -36,19 +34,19 @@ public:
      */
     TreeNode * findSubtree(TreeNode * root) {
         // write your code here
-        
+
         Result opt(std::numeric_limits<int>::max(), nullptr);
         runPostOrder(root, opt);
         return opt.root;
     }
-    
+
 private:
     Result runPostOrder(TreeNode* root, Result& opt) {
-        
+
         if (!root) {
             return Result();
         }
-        
+
         auto l = runPostOrder(root->left, opt);
         auto r = runPostOrder(root->right, opt);
 

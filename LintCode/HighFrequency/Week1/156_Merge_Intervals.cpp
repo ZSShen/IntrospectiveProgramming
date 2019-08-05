@@ -18,34 +18,31 @@ public:
     vector<Interval> merge(vector<Interval> &intervals) {
         // write your code here
 
-        int size = intervals.size();
-        if (size == 0) {
+        int n = intervals.size();
+        if (n == 0) {
             return {};
         }
 
         std::sort(intervals.begin(), intervals.end(),
-            [](const Interval& lhs, const Interval& rhs) {
-                if (lhs.start == rhs.end) {
-                    return lhs.end < rhs.end;
-                }
+            [] (const auto& lhs, const auto& rhs) {
                 return lhs.start < rhs.start;
             });
 
         std::vector<Interval> ans;
-        Interval src(intervals[0]);
+        Interval merge(intervals[0]);
 
-        for (int i = 1 ; i < size ; ++i) {
-            const auto& dst = intervals[i];
-            if (dst.start > src.end) {
-                ans.push_back(src);
-                src = dst;
+        for (int i = 1 ; i < n ; ++i) {
+            const auto& curr = intervals[i];
+
+            if (curr.start <= merge.end) {
+                merge.end = std::max(merge.end, curr.end);
                 continue;
             }
 
-            src.end = std::max(src.end, dst.end);
+            ans.emplace_back(std::move(merge));
+            merge = curr;
         }
-
-        ans.push_back(src);
+        ans.emplace_back(std::move(merge));
 
         return ans;
     }
