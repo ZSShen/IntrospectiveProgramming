@@ -15,44 +15,78 @@ public:
     RandomListNode *copyRandomList(RandomListNode *head) {
         // write your code here
 
+        /**
+         *
+         *      A -> B -> C -> ...
+         *
+         *  Step 1. Generate a copy for each node and put the copy next to
+         *  its original node.
+         *
+         *      A -> A+ -> B -> B+ -> C -> C+ -> ...
+         *
+         *  Step 2. For an orignal node, we need to follow its random pointer.
+         *  Then, the node next to the pointed node would be the target of the
+         *  random pointer of the replicated node.
+         *
+         *      -----------------------
+         *      |                     |
+         *      |                     v
+         *      A -> A+ -> B -> B+ -> C -> C+ -> ...
+         *           |                      ^
+         *           |                      |
+         *           ------------------------
+         *
+         *  Step 3. Finally, we need to split the replicated list and the
+         *  original list.
+         */
+
         if (!head) {
             return nullptr;
         }
 
+        // Step 1.
         auto curr = head;
         while (curr) {
             auto succ = curr->next;
-
-            auto dup = new RandomListNode(curr->label);
-            dup->next = succ;
-            curr->next = dup;
-
+            auto copy = new RandomListNode(curr->label);
+            copy->next = succ;
+            curr->next = copy;
             curr = succ;
         }
 
+        // Step 2.
         curr = head;
         while (curr) {
-
-            auto random = curr->random;
-            if (random) {
-                curr->next->random = random->next;
+            // Note that the random pointers can be null.
+            if (curr->random) {
+                auto rand = curr->random->next;
+                curr->next->random = rand;
             }
-
             curr = curr->next->next;
         }
 
+        // Step 3.
         auto new_head = head->next;
+
+        /**
+         *  curr copy  succ
+         *   |    |     |
+         *   v    v     v
+         *   A -> A+ -> B -> B+
+         *
+         *   A -> B, A+ -> B+
+         */
+
         curr = head;
+        auto copy = head->next;
         while (curr) {
-
-            auto dup = curr->next;
-
-            curr->next = dup->next;
-            if (curr->next) {
-                dup->next = curr->next->next;
+            auto succ = copy->next;
+            curr->next = succ;
+            if (succ) {
+                copy->next = succ->next;
+                copy = succ->next;
             }
-
-            curr = curr->next;
+            curr = succ;
         }
 
         return new_head;

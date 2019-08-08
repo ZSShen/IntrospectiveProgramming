@@ -21,7 +21,7 @@ public:
      */
     ListNode * insert(ListNode * node, int x) {
         // write your code here
-        
+
         if (!node) {
             auto new_node = new ListNode(x);
             new_node->next = new_node;
@@ -30,16 +30,18 @@ public:
 
         ListNode* pred = nullptr;
         ListNode* curr = node;
+
         do {
             pred = curr;
             curr = curr->next;
-            
-            // At the ascending slope.
+
+            // We are at the ascending slope.
             if (pred->val <= x && x <= curr->val) {
                 break;
             }
-            // At the peak or the bottom.
-            if (pred->val > curr->val && (x >= pred->val || x <= curr->val)) {
+
+            // We are at the peak.
+            if (pred->val > curr->val && (x > pred->val || x < curr->val)) {
                 break;
             }
         } while (curr != node);
@@ -47,7 +49,7 @@ public:
         auto new_node = new ListNode(x);
         pred->next = new_node;
         new_node->next = curr;
-        
+
         return node;
     }
 };

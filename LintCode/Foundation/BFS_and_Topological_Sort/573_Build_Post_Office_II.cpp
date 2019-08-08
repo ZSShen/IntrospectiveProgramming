@@ -1,9 +1,9 @@
 
-struct Coordinate {
-    int x;
-    int y;
-    
-    Coordinate(int x, int y)
+
+struct Record {
+    int x, y;
+
+    Record(int x, int y)
       : x(x), y(y)
     { }
 };
@@ -11,12 +11,9 @@ struct Coordinate {
 
 class Solution {
 public:
-    Solution() {
-        trans.push_back({1, 0});
-        trans.push_back({-1, 0});
-        trans.push_back({0, 1});
-        trans.push_back({0, -1});
-    }
+    Solution()
+      : directs({{1, 0}, {-1, 0}, {0, 1}, {0, -1}})
+    { }
 
     /**
      * @param grid: a 2D grid
@@ -24,92 +21,93 @@ public:
      */
     int shortestDistance(vector<vector<int>> &grid) {
         // write your code here
-        
-        int m = grid.size();
-        if (m == 0) {
-            return -1;
-        }
-        
-        int n = grid[0].size();
-        if (n == 0) {
-            return -1;
+
+        int num_r = grid.size();
+        if (num_r == 0) {
+            return 0;
         }
 
-        std::vector<Coordinate> spaces;
-        std::vector<Coordinate> houses;
-        for (int i = 0 ; i < m ; ++i) {
-            for (int j = 0 ; j < n ; ++j) {
-                if (grid[i][j] == 0) {
-                    spaces.push_back(Coordinate(i, j));
-                } else if (grid[i][j] == 1) {
-                    houses.push_back(Coordinate(i, j));
+        int num_c = grid[0].size();
+        if (num_c == 0) {
+            return 0;
+        }
+
+        // Collect the houses.
+        std::vector<Record> recs;
+        int num_house = 0;
+        for (int i = 0 ; i < num_r ; ++i) {
+            for (int j = 0 ; j < num_c ; ++j) {
+                if (grid[i][j] == 1) {
+                    recs.push_back(Record(i, j));
+                    ++num_house;
                 }
             }
         }
-        
-        std::vector<std::vector<int>> reach(m, std::vector<int>(n, 0));
-        std::vector<std::vector<int>> dist(m, std::vector<int>(n, 0));
-        
-        for (const auto& house : houses) {
-            runBFS(house, m, n, grid, reach, dist);
+
+        std::vector<std::vector<int>> dist(num_r, std::vector<int>(num_c, 0));
+        std::vector<std::vector<int>> reach(num_r, std::vector<int>(num_c, 0));
+
+        for (const auto& rec : recs) {
+            floodAndFill(rec.x, rec.y, num_r, num_c, grid, dist, reach);
         }
-        
-        int num_house = houses.size();
-        int ans = std::numeric_limits<int>::max();
-        for (const auto& space : spaces) {
-            if (reach[space.x][space.y] < num_house) {
-                continue;
+
+        int ans = INT_MAX;
+        for (int i = 0 ; i < num_r ; ++i) {
+            for (int j = 0 ; j < num_c ; ++j) {
+                if (reach[i][j] == num_house) {
+                    ans = std::min(ans, dist[i][j]);
+                }
             }
-            ans = std::min(ans, dist[space.x][space.y]);
         }
-        
-        return (ans == std::numeric_limits<int>::max()) ? -1 : ans;
+
+        return (ans != INT_MAX) ? ans : -1;
     }
 
 private:
-    std::vector<std::vector<int>> trans;
+    void floodAndFill(
+            int r, int c, int num_r, int num_c,
+            const auto& grid, auto& dist, auto& reach) {
 
-    void runBFS(
-            const Coordinate& house,
-            int m,
-            int n,
-            const std::vector<std::vector<int>>& grid,
-            std::vector<std::vector<int>>& reach,
-            std::vector<std::vector<int>>& dist) {
-        
-        std::queue<Coordinate> queue;
-        queue.push(house);
+        std::queue<Record> queue;
+        queue.push(Record(r, c));
 
-        std::vector<std::vector<bool>> visit(m, std::vector<bool>(n, false));
-        visit[house.x][house.y] = true;
+        std::vector<std::vector<bool>>
+            visit(num_r, std::vector<bool>(num_c, false));
+        visit[r][c] = true;
 
-        int sum = 0;
+        int level = 0;
+
         while (!queue.empty()) {
-            ++sum;
+            int n = queue.size();
+            ++level;
 
-            int size = queue.size();
-            for (int i = 0 ; i < size ; ++i) {
-                auto top = queue.front();
+            for (int i = 0 ; i < n ; ++i) {
+                auto rec = queue.front();
                 queue.pop();
 
-                for (const auto& cord : trans) {
-                    int x = top.x + cord[0];
-                    int y = top.y + cord[1];
-                    
-                    if (!(x >= 0 && x < m && y >= 0 && y < n) ||
-                        visit[x][y]) {
+                int x = rec.x;
+                int y = rec.y;
+
+                for (const auto& direct : directs) {
+                    int nx = x + direct[0];
+                    int ny = y + direct[1];
+
+                    if (!(nx >= 0 && ny >= 0 && nx < num_r && ny < num_c) ||
+                        visit[nx][ny] ||
+                        grid[nx][ny] != 0) {
                         continue;
                     }
-                    
-                    visit[x][y] = true;
-                    if (grid[x][y] == 0) {
-                        ++reach[x][y];
-                        dist[x][y] += sum;
-                        queue.push(Coordinate(x, y));
-                    }
+
+                    // Reach an empty cell.
+                    visit[nx][ny] = true;
+                    queue.push(Record(nx, ny));
+
+                    dist[nx][ny] += level;
+                    ++reach[nx][ny];
                 }
             }
         }
     }
-    
+
+    std::vector<std::vector<int>> directs;
 };

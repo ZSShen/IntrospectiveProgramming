@@ -20,7 +20,8 @@ public:
         // Write your code here
 
         std::unordered_map<
-            int, std::priority_queue<int, std::vector<int>, greater<int>>> map;
+            int,
+            std::priority_queue<int, std::vector<int>, std::greater<int>>> map;
 
         for (const auto& result : results) {
             int id = result.id;
@@ -36,17 +37,14 @@ public:
         for (auto& pair : map) {
             int id = pair.first;
 
-            double avg = 0;
+            int sum = 0;
             auto& queue = pair.second;
-            int size = queue.size();
-
             while (!queue.empty()) {
-                avg += queue.top();
+                sum += queue.top();
                 queue.pop();
             }
 
-            avg /= size;
-            ans[id] = avg;
+            ans[id] = static_cast<double>(sum) / 5;
         }
 
         return ans;

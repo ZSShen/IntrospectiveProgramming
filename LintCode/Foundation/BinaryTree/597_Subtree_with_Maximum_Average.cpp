@@ -11,18 +11,17 @@
  * }
  */
 
-
-struct Result {
-    int size;
+struct Record {
     int sum;
+    int count;
     TreeNode* root;
-    
-    Result()
-        : size(0), sum(0), root(nullptr)
+
+    Record()
+      : sum(0), count(0), root(nullptr)
     { }
-    
-    Result(int size, int sum, TreeNode* root)
-        : size(size), sum(sum), root(root)
+
+    Record(int sum, int count, TreeNode* root)
+      : sum(sum), count(count), root(root)
     { }
 };
 
@@ -35,32 +34,34 @@ public:
      */
     TreeNode * findSubtree2(TreeNode * root) {
         // write your code here
-        
-        Result opt;
+
+        Record opt(INT_MIN, 1, nullptr);
         runPostOrder(root, opt);
         return opt.root;
     }
 
+
 private:
-    Result runPostOrder(TreeNode* root, Result& opt) {
+    Record runPostOrder(TreeNode* root, Record& opt) {
 
         if (!root) {
-            return Result();
+            return Record();
         }
 
-        auto left = runPostOrder(root->left, opt);
-        auto right = runPostOrder(root->right, opt);
+        auto l = runPostOrder(root->left, opt);
+        auto r = runPostOrder(root->right, opt);
 
-        int size = 1 + left.size + right.size;
-        int sum = root->val + left.sum + right.sum;
-        double avg = static_cast<double>(sum) / size;
+        int sum = l.sum + r.sum + root->val;
+        int count = l.count + r.count + 1;
 
-        if (!opt.root || avg > static_cast<double>(opt.sum) / opt.size) {
-            opt.size = size;
+        double test = static_cast<double>(sum) / count;
+        double ref = static_cast<double>(opt.sum) / opt.count;
+        if (test > ref) {
             opt.sum = sum;
+            opt.count = count;
             opt.root = root;
         }
-        
-        return Result(size, sum, root);
+
+        return Record(sum, count, root);
     }
 };

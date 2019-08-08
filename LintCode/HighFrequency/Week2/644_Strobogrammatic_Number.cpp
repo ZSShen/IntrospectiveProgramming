@@ -7,29 +7,27 @@ public:
     bool isStrobogrammatic(string &num) {
         // write your code here
 
-        /**
-         * Special Digits:
-         * 0, 1, 8, 6&9
-         */
-
         std::string mirror;
         for (char ch : num) {
-            if (ch == '0') {
-                mirror.push_back(ch);
-            } else if (ch == '1') {
-                mirror.push_back(ch);
-            } else if (ch == '8') {
-                mirror.push_back(ch);
-            } else if (ch == '6') {
-                mirror.push_back('9');
-            } else if (ch == '9') {
-                mirror.push_back('6');
-            } else {
-                return false;
+            switch (ch) {
+                case '6':
+                    mirror.push_back('9');
+                    break;
+                case '9':
+                    mirror.push_back('6');
+                    break;
+                case '0':
+                case '1':
+                case '8':
+                    mirror.push_back(ch);
+                    break;
+                default:
+                // Simply return false for the numbers including 2, 3, 4, 5, and 7.
+                    return false;
             }
         }
-        std::reverse(mirror.begin(), mirror.end());
 
-        return num == mirror;
+        std::reverse(mirror.begin(), mirror.end());
+        return mirror == num;
     }
 };
