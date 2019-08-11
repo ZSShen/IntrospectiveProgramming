@@ -7,13 +7,10 @@ public:
     void moveZeroes(vector<int> &nums) {
         // write your code here
 
-        int size = nums.size();
-        if (size <= 1) {
-            return;
-        }
-
+        int n = nums.size();
         int l = 0, r = 0;
-        while (r < size) {
+
+        while (r < n) {
             if (nums[r] != 0) {
                 std::swap(nums[l], nums[r]);
                 ++l;

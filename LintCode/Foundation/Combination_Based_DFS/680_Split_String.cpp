@@ -7,40 +7,39 @@ public:
     vector<vector<string>> splitString(string& s) {
         // write your code here
 
-        std::vector<std::vector<std::string>> ans;
-        int size = s.length();
-        if (size == 0) {
-            ans.push_back(std::vector<std::string>());
-            return ans;
+        int n = s.length();
+        if (n == 0) {
+            return {{}};
         }
 
         std::vector<std::string> collect;
-        int index = 0;
-        runBacktracking(index, size, s, collect, ans);
+        std::vector<std::vector<std::string>> ans;
+        runBackTracking(s, 0, n, collect, ans);
+
         return ans;
     }
 
 private:
-    void runBacktracking(
-            int end,
-            int bound,
+    void runBackTracking(
             const std::string& str,
+            int index, int bound,
             std::vector<std::string>& collect,
             std::vector<std::vector<std::string>>& ans) {
 
-        if (end == bound) {
+        if (index == bound) {
             ans.push_back(collect);
             return;
         }
 
-        int bgn = end;
-        collect.push_back(str.substr(bgn, 1));
-        runBacktracking(end + 1, bound, str, collect, ans);
+        auto token = str.substr(index, 1);
+        collect.push_back(token);
+        runBackTracking(str, index + 1, bound, collect, ans);
         collect.pop_back();
 
-        if (bgn + 1 < bound) {
-            collect.push_back(str.substr(bgn, 2));
-            runBacktracking(end + 2, bound, str, collect, ans);
+        if (index + 1 < bound) {
+            token = str.substr(index, 2);
+            collect.push_back(token);
+            runBackTracking(str, index + 2, bound, collect, ans);
             collect.pop_back();
         }
     }
