@@ -25,20 +25,21 @@ public:
     vector<ListNode*> binaryTreeToLists(TreeNode* root) {
         // Write your code here
 
-        std::vector<ListNode*> ans;
         if (!root) {
-            return ans;
+            return {};
         }
 
         std::queue<TreeNode*> queue;
         queue.push(root);
 
-        ListNode* dummy = new ListNode(-1);
+        auto dummy = new ListNode(-1);
+        std::vector<ListNode*> ans;
 
         while (!queue.empty()) {
-            int size = queue.size();
+            int n = queue.size();
             auto pred = dummy;
-            for (int i = 0 ; i < size ; ++i) {
+
+            for (int i = 0 ; i < n ; ++i) {
                 auto node = queue.front();
                 queue.pop();
 
@@ -53,11 +54,11 @@ public:
                     queue.push(node->right);
                 }
             }
+
             ans.push_back(dummy->next);
         }
 
         delete dummy;
-
         return ans;
     }
 };

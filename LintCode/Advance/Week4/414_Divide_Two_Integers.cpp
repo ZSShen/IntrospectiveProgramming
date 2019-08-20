@@ -1,9 +1,5 @@
 class Solution {
 public:
-    Solution()
-      : max_int(std::numeric_limits<int>::max())
-    { }
-
     /**
      * @param dividend: the dividend
      * @param divisor: the divisor
@@ -13,10 +9,11 @@ public:
         // write your code here
 
         long divd = static_cast<long>(dividend);
+        long divr = static_cast<long>(divisor);
+
         if (divd < 0) {
             divd = -divd;
         }
-        long divr = static_cast<long>(divisor);
         if (divr < 0) {
             divr = -divr;
         }
@@ -39,13 +36,6 @@ public:
             quot = -quot;
         }
 
-        if (quot >= max_int) {
-            return max_int;
-        }
-
-        return quot;
+        return (quot > INT_MAX) ? INT_MAX : quot;
     }
-
-private:
-    int max_int;
 };

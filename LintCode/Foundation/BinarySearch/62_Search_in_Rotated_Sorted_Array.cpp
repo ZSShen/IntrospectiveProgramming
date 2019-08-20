@@ -8,29 +8,26 @@ public:
     int search(vector<int> &A, int target) {
         // write your code here
 
-        int size = A.size();
-        if (size == 0) {
+        int n = A.size();
+        if (n == 0) {
             return -1;
         }
 
-        int l = 0, r = size - 1;
+        int l = 0, r = n - 1;
+
         while (l + 1 < r) {
             int m = l + (r - l) / 2;
 
-            if (target == A[m]) {
-                return m;
-            }
-
             if (A[m] < A[r]) {
                 // The right portion is sorted.
-                if (A[m] < target && target <= A[r]) {
+                if (A[m] <= target && target <= A[r]) {
                     l = m;
                 } else {
                     r = m;
                 }
-            } else {
+            } else if (A[l] < A[m]) {
                 // The left portion is sorted.
-                if (A[l] <= target && target < A[m]) {
+                if (A[l] <= target && target <= A[m]) {
                     r = m;
                 } else {
                     l = m;
@@ -38,10 +35,9 @@ public:
             }
         }
 
-        if (A[l] == target) {
+        if (target == A[l]) {
             return l;
-        }
-        if (A[r] == target) {
+        } else if (target == A[r]) {
             return r;
         }
         return -1;

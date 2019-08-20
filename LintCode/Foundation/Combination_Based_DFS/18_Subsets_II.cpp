@@ -6,46 +6,45 @@ public:
      */
     vector<vector<int>> subsetsWithDup(vector<int> &nums) {
         // write your code here
-        
-        int size = nums.size();
-        if (size == 0) {
+
+        int n = nums.size();
+        if (n == 0) {
             return {{}};
         }
-        
+
         std::sort(nums.begin(), nums.end());
-        
+
+        std::vector<int> collect;
         std::vector<std::vector<int>> ans;
-        std::vector<int> prefix;
-        
-        runBacktracking(0, size, nums, prefix, ans);
+        for (int i = 0 ; i <= n ; ++i) {
+            runBackTracking(nums, 0, n, 0, i, collect, ans);
+        }
+
         return ans;
     }
 
+
 private:
-    void runBacktracking(
-            int bgn,
-            int end,
+    void runBackTracking(
             const std::vector<int>& nums,
-            std::vector<int>& prefix,
+            int index, int bound,
+            int k, int n,
+            std::vector<int>& collect,
             std::vector<std::vector<int>>& ans) {
-        
-        ans.push_back(prefix);
-        
-        /**
-         * 1 2a 2b 2c:
-         * 
-         * (1, 2a, 2b)
-         * (1, 2a, 2c)
-         * 
-         */
-        
-        for (int i = bgn ; i < end ; ++i) {
-            if (i > 0 && nums[i] == nums[i - 1] && i > bgn) {
+
+        if (k == n) {
+            ans.push_back(collect);
+            return;
+        }
+
+        for (int i = index ; i < bound ; ++i) {
+            if (i > index && nums[i] == nums[i - 1]) {
                 continue;
             }
-            prefix.push_back(nums[i]);
-            runBacktracking(i + 1, end, nums, prefix, ans);
-            prefix.pop_back();
+
+            collect.push_back(nums[i]);
+            runBackTracking(nums, i + 1, bound, k + 1, n, collect, ans);
+            collect.pop_back();
         }
     }
 };

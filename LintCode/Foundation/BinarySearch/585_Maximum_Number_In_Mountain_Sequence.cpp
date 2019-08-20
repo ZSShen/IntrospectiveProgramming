@@ -7,8 +7,9 @@ public:
     int mountainSequence(vector<int> &nums) {
         // write your code here
 
-        int size = nums.size();
-        int l = 0, r = size - 1;
+        int n = nums.size();
+        int l = 0, r = n - 1;
+
         while (l + 1 < r) {
             int m = l + (r - l) / 2;
             if (nums[m] < nums[m + 1]) {

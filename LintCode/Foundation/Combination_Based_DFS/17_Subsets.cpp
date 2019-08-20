@@ -7,33 +7,38 @@ public:
     vector<vector<int>> subsets(vector<int> &nums) {
         // write your code here
 
-        std::vector<std::vector<int>> ans;
-        int size = nums.size();
-        if (size == 0) {
-            ans.push_back(std::vector<int>());
-            return ans;
+        int n = nums.size();
+        if (n == 0) {
+            return {{}};
         }
 
         std::sort(nums.begin(), nums.end());
 
         std::vector<int> collect;
-        runBacktracking(0, size, nums, collect, ans);
+        std::vector<std::vector<int>> ans;
+        for (int i = 0 ; i <= n ; ++i) {
+            runBackTracking(nums, 0, n, 0, i, collect, ans);
+        }
+
         return ans;
     }
 
 private:
-    void runBacktracking(
-            int start,
-            int bound,
-            std::vector<int>& nums,
+    void runBackTracking(
+            const std::vector<int>& nums,
+            int index, int bound,
+            int k, int n,
             std::vector<int>& collect,
             std::vector<std::vector<int>>& ans) {
 
-        ans.push_back(collect);
+        if (k == n) {
+            ans.push_back(collect);
+            return;
+        }
 
-        for (int i = start ; i < bound ; ++i) {
+        for (int i = index ; i < bound ; ++i) {
             collect.push_back(nums[i]);
-            runBacktracking(i + 1, bound, nums, collect, ans);
+            runBackTracking(nums, i + 1, bound, k + 1, n, collect, ans);
             collect.pop_back();
         }
     }
