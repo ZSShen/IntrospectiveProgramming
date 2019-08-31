@@ -25,6 +25,12 @@ public:
                 ++t;
             }
 
+            // For the edge case like:
+            // word: a
+            // abbr: 01
+            // 0 hinders the macthcing flow, and thus we should skip this
+            // illegal leading digit.
+
             if (dst == '0') {
                 break;
             }

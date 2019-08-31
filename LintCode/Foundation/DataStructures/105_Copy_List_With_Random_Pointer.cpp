@@ -19,14 +19,18 @@ public:
          *
          *      A -> B -> C -> ...
          *
-         *  Step 1. Generate a copy for each node and put the copy next to
-         *  its original node.
+         *  Step 1. Generate a replicated node for each node and put that copy
+         *  behind the original node.
          *
          *      A -> A+ -> B -> B+ -> C -> C+ -> ...
          *
-         *  Step 2. For an orignal node, we need to follow its random pointer.
-         *  Then, the node next to the pointed node would be the target of the
-         *  random pointer of the replicated node.
+         *  Step 2. For an orignal node, follow its random pointer.
+         *  Then, the node next to the pointed node would be the one that the
+         *  random pointer of the replicated node should point to.
+         *
+         *        random
+         *      A ------> C -> C+
+         *   => A+ -> C+
          *
          *      -----------------------
          *      |                     |

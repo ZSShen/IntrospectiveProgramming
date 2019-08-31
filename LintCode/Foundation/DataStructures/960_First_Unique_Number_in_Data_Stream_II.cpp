@@ -47,3 +47,45 @@ private:
     std::unordered_map<int, std::list<int>::iterator> map_;
     std::unordered_set<int> set_;
 };
+
+
+#include <list>
+
+
+class DataStream {
+public:
+
+    DataStream(){
+        // do intialization if necessary
+    }
+
+    /**
+     * @param num: next number in stream
+     * @return: nothing
+     */
+    void add(int num) {
+        // write your code here
+
+        if (freq.count(num) == 0) {
+            cands.push_back(num);
+        }
+        ++freq[num];
+    }
+
+    /**
+     * @return: the first unique number in stream
+     */
+    int firstUnique() {
+        // write your code here
+
+        while (freq[cands.front()] > 1) {
+            cands.pop_front();
+        }
+
+        return cands.front();
+    }
+
+private:
+    std::unordered_map<int, int> freq;
+    std::list<int> cands;
+};

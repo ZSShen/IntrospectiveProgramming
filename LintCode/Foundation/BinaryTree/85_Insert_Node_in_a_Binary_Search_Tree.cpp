@@ -22,26 +22,25 @@ public:
     TreeNode * insertNode(TreeNode * root, TreeNode * node) {
         // write your code here
 
-        TreeNode* parent = nullptr;
+        if (!root) {
+            return node;
+        }
+
         auto curr = root;
+        auto pred = root;
         while (curr) {
-            parent = curr;
-            if (node->val < curr->val) {
+            pred = curr;
+            if (curr->val > node->val) {
                 curr = curr->left;
             } else {
                 curr = curr->right;
             }
         }
 
-        // For an empty tree.
-        if (!parent) {
-            return new TreeNode(node->val);
-        }
-
-        if (node->val < parent->val) {
-            parent->left = new TreeNode(node->val);
+        if (node->val > pred->val) {
+            pred->right = node;
         } else {
-            parent->right = new TreeNode(node->val);
+            pred->left = node;
         }
 
         return root;

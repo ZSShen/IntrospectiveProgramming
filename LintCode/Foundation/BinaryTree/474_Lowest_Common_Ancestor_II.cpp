@@ -20,21 +20,18 @@ public:
         // write your code here
 
         std::unordered_set<ParentTreeNode*> set;
-
-        auto curr = A;
-        while (curr) {
-            set.insert(curr);
-            curr = curr->parent;
+        while (A) {
+            set.insert(A);
+            A = A->parent;
         }
 
-        curr = B;
-        while (curr) {
-            if (set.count(curr) == 1) {
-                return curr;
+        while (B) {
+            if (set.count(B) == 1) {
+                break;
             }
-            curr = curr->parent;
+            B = B->parent;
         }
 
-        return nullptr;
+        return B;
     }
 };

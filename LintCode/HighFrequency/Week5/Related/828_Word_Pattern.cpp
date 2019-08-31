@@ -75,20 +75,18 @@ public:
                 return false;
             }
 
-            if (forward.count(ch) == 0) {
+            auto iter_f = forward.find(ch);
+            if (iter_f == forward.end()) {
                 forward[ch] = token;
-            } else {
-                if (forward[ch] != token) {
-                    return false;
-                }
+            } else if (token != iter_f->second) {
+                return false;
             }
 
-            if (backward.count(token) == 0) {
+            auto iter_b = backward.find(token);
+            if (iter_b == backward.end()) {
                 backward[token] = ch;
-            } else {
-                if (backward[token] != ch) {
-                    return false;
-                }
+            } else if (ch != iter_b->second) {
+                return false;
             }
         }
 

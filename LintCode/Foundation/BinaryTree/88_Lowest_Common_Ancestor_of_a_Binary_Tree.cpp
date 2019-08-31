@@ -23,16 +23,7 @@ public:
     TreeNode * lowestCommonAncestor(TreeNode * root, TreeNode * A, TreeNode * B) {
         // write your code here
 
-        /**
-         *  Postorder Traversal
-         *  Note that this solution only works when A and B can be found.
-         */
-
-        if (!root) {
-            return nullptr;
-        }
-
-        if (root == A || root == B) {
+        if (!root || root == A || root == B) {
             return root;
         }
 
@@ -50,6 +41,8 @@ public:
         if (r) {
             return r;
         }
+
+        return nullptr;
     }
 };
 
