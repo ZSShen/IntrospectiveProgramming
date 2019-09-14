@@ -36,6 +36,15 @@ public:
          *
          * Upon finishing consuming the nodes collected in the first stack,
          * we override the first stack with the content of the second stack.
+         *
+         *      Visualization:
+         *
+         *      ------>-----> level 0  L -> R
+         *                  |
+         *      <-----<-----| level 1  R -> L
+         *      |
+         *      |----->-----> level 2  L -> R
+         *
          */
 
         if (!root) {

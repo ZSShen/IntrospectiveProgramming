@@ -31,46 +31,43 @@ public:
         queue.push("0000");
 
         int step = 0;
-
         while (!queue.empty()) {
-            ++step;
-            int size = queue.size();
 
-            for (int i = 0 ; i < size ; ++i) {
+            ++step;
+            int n = queue.size();
+            for (int i = 0 ; i < n ; ++i) {
                 auto src = queue.front();
                 queue.pop();
 
-                for (int i = 0 ; i < 4 ; ++i) {
+                auto dst(src);
+                for (int j = 0 ; j < 4 ; ++j) {
+
+                    char back = dst[j];
 
                     // Move the wheel clock-wise.
-                    auto dst =
-                        src.substr(0, i) +
-                        std::to_string((src[i] - '0' + 1) % 10) +
-                        src.substr(i + 1, 3 - i);
-
+                    dst[j] = ((dst[j] - '0' + 1) % 10) + '0';
                     if (dst == target) {
                         return step;
                     }
 
                     if (deadlocks.count(dst) == 0 && visit.count(dst) == 0) {
                         queue.push(dst);
-                        visit.emplace(std::move(dst));
+                        visit.insert(dst);
                     }
 
-                    // Move the wheel counter clock-wise.
-                    dst =
-                        src.substr(0, i) +
-                        std::to_string((src[i] - '0' + 9) % 10) +
-                        src.substr(i + 1, 3 - i);
-
+                    // Move the whell counter clock-wise.
+                    dst[j] = back;
+                    dst[j] = ((dst[j] - '0' + 9) % 10) + '0';
                     if (dst == target) {
                         return step;
                     }
 
                     if (deadlocks.count(dst) == 0 && visit.count(dst) == 0) {
                         queue.push(dst);
-                        visit.emplace(std::move(dst));
+                        visit.insert(dst);
                     }
+
+                    dst[j] = back;
                 }
             }
         }
