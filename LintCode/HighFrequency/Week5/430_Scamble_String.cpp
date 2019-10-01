@@ -28,11 +28,6 @@ public:
          *      => Sp == Ts && Ss == Tp, scrambled one!
          */
 
-
-        if (s1.length() != s2.length()) {
-            return false;
-        }
-
         std::unordered_map<std::string,
             std::unordered_map<std::string, bool>> memo;
         return canScramble(s1, s2, memo);
@@ -43,16 +38,44 @@ private:
     bool canScramble(const auto& s, const auto& t, auto& memo) {
 
         // Check the cached result first.
-        if (memo.count(s) == 1 && memo[s].count(t) == 1) {
-            return memo[s][t];
+        auto it_s = memo.find(s);
+        if (it_s != memo.end()) {
+            auto& inner = it_s->second;
+            auto it_t = inner.find(t);
+            if (it_t != inner.end()) {
+                return it_t->second;
+            }
         }
 
-        if (s == t) {
-            memo[s][t] = true;
-            return true;
-        }
-
+        // Check the string lengths.
         int n = s.length();
+        int m = t.length();
+        if (n != m) {
+            return false;
+        }
+
+        if (n == 1) {
+            bool res = s[0] == t[0];
+            memo[s][t] = res;
+            return res;
+        }
+
+        // Check the character composition.
+        std::vector<int> freq_s(26, 0);
+        std::vector<int> freq_t(26, 0);
+        for (char ch : s) {
+            ++freq_s[ch - 'a'];
+        }
+        for (char ch : t) {
+            ++freq_t[ch - 'a'];
+        }
+        for (int i = 0 ; i < 26 ; ++i) {
+            if (freq_s[i] != freq_t[i]) {
+                memo[s][t] = false;
+                return false;
+            }
+        }
+
         for (int i = 0 ; i < n - 1 ; ++i) {
 
             int l = i + 1;
