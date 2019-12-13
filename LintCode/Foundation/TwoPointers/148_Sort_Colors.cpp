@@ -47,8 +47,8 @@ public:
          *  1. The "one" pointer guides the scanning procedure.
          *  2. The "zero" pointer points to tail of the consecutive zeros, which
          *     are shifted to the left hand side of the array.
-         *  3. The "two" pointer points to the tail of the consecutive twos,
-         *     which are shifted to the right hand size of the array.
+         *  3. The "two" pointer points to the head of the consecutive twos,
+         *     which are shifted to the right hand side of the array.
          *
          *       zero     two
          *          |     |

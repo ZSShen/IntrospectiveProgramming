@@ -29,3 +29,52 @@ public:
         }
     }
 };
+
+
+class Solution {
+public:
+    /**
+     * @param colors: A list of integer
+     * @param k: An integer
+     * @return: nothing
+     */
+    void sortColors2(vector<int> &colors, int k) {
+        // write your code here
+
+        divideAndConquer(colors, 0, colors.size() - 1, 1, k);
+    }
+
+private:
+    void divideAndConquer(
+        auto& colors, int left, int right, int min, int max) {
+
+        if (min == max) {
+            return;
+        }
+        if (left >= right) {
+            return;
+        }
+
+        int l = left, r = right;
+        int mid = (min + max) / 2;
+
+        while (l <= r) {
+
+            while (l <= r && colors[l] <= mid) {
+                ++l;
+            }
+            while (l <= r && colors[r] > mid) {
+                --r;
+            }
+
+            if (l <= r) {
+                std::swap(colors[l], colors[r]);
+                ++l;
+                --r;
+            }
+        }
+
+        divideAndConquer(colors, left, r, min, mid);
+        divideAndConquer(colors, l, right, mid + 1, max);
+    }
+};

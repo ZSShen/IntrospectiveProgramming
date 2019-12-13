@@ -19,31 +19,26 @@ public:
     int searchBigSortedArray(ArrayReader * reader, int target) {
         // write your code here
 
-        int bgn = 0;
-        int end = INT_MAX;
+        int r = 1;
+        while (reader->get(r) < target) {
+            r <<= 1;
+        }
 
-        while (bgn + 1 < end) {
-            int mid = bgn + (end - bgn) / 2;
-
-            // Check for stream boundary.
-            int num = reader->get(mid);
-            if (num == INT_MAX) {
-                end = mid;
-                continue;
-            }
-
-            if (target <= num) {
-                end = mid;
+        int l = 0;
+        while (l + 1 < r) {
+            int m = l + (r - l) / 2;
+            if (target > reader->get(m)) {
+                l = m;
             } else {
-                bgn = mid;
+                r = m;
             }
         }
 
-        if (reader->get(bgn) == target) {
-            return bgn;
+        if (reader->get(l) == target) {
+            return l;
         }
-        if (reader->get(end) == target) {
-            return end;
+        if (reader->get(r) == target) {
+            return r;
         }
         return -1;
     }
